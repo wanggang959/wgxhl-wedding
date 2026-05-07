@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-const weddingDate = new Date('2026-10-01T18:00:00+08:00');
+const weddingDate = new Date('2026-09-24T18:00:00+08:00');
 
 const photos = [
   'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80',
@@ -19,25 +19,29 @@ function Countdown() {
     return () => clearInterval(timer);
   }, []);
 
-  const { days, hours, minutes, seconds } = useMemo(() => {
+  const { days, hours, minutes, seconds, isWeddingDay } = useMemo(() => {
     const total = Math.max(0, timeLeft);
     return {
       days: Math.floor(total / (1000 * 60 * 60 * 24)),
       hours: Math.floor((total / (1000 * 60 * 60)) % 24),
       minutes: Math.floor((total / (1000 * 60)) % 60),
       seconds: Math.floor((total / 1000) % 60),
+      isWeddingDay: timeLeft <= 0,
     };
   }, [timeLeft]);
 
   return (
-    <div className="countdown-grid">
-      {[['天', days], ['时', hours], ['分', minutes], ['秒', seconds]].map(([label, value]) => (
-        <div className="time-card" key={label}>
-          <div className="time-value">{String(value).padStart(2, '0')}</div>
-          <div className="time-label">{label}</div>
-        </div>
-      ))}
-    </div>
+    <>
+      <div className="countdown-grid" aria-label="距离婚礼开始的倒计时">
+        {[['天', days], ['时', hours], ['分', minutes], ['秒', seconds]].map(([label, value]) => (
+          <div className="time-card" key={label}>
+            <div className="time-value">{String(value).padStart(2, '0')}</div>
+            <div className="time-label">{label}</div>
+          </div>
+        ))}
+      </div>
+      {isWeddingDay && <p className="countdown-done">今天，我们结婚啦</p>}
+    </>
   );
 }
 
@@ -48,14 +52,14 @@ export default function App() {
         <p className="domain">wgxhl.space</p>
         <h1>王刚 & 谢何丽</h1>
         <p className="subtitle">诚挚邀请您参加我们的婚礼</p>
-        <p className="date">2026年10月1日 · 18:00 · 杭州西子湖四季酒店</p>
+        <p className="date">2026年9月24日 · 18:00 · 杭州西子湖四季酒店</p>
         <a className="btn" href="#rsvp">立即 RSVP</a>
       </header>
 
       <section className="section glass">
         <h2>婚礼信息</h2>
         <ul className="info-list">
-          <li><strong>婚礼时间：</strong>2026年10月1日（周四）18:00</li>
+          <li><strong>婚礼时间：</strong>2026年9月24日（周四）18:00</li>
           <li><strong>婚礼地点：</strong>杭州西子湖四季酒店 · 湖畔宴会厅</li>
           <li><strong>着装建议：</strong>优雅正式 / 浅色系</li>
         </ul>
