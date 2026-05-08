@@ -7,6 +7,7 @@ const amapUrl = `https://uri.amap.com/search?${amapSearchParams}&callnative=1`;
 const amapKey = '2c4e88f3b767db0de947d306d17b7b7c';
 const amapSecurityCode = '04344977613a3a9c257ced37751adc5a';
 const defaultVenuePosition = [104.851, 29.772];
+const venueMapZoom = 15;
 let amapLoader;
 
 const photos = [
@@ -90,7 +91,7 @@ function WeddingMap() {
         if (cancelled || !mapRef.current) return;
 
         map = new AMap.Map(mapRef.current, {
-          zoom: 16,
+          zoom: venueMapZoom,
           center: defaultVenuePosition,
           viewMode: '2D',
           resizeEnable: true,
@@ -106,7 +107,7 @@ function WeddingMap() {
           });
 
           map.add(marker);
-          map.setZoomAndCenter(17, position);
+          map.setZoomAndCenter(venueMapZoom, position);
           setMapTip('');
         };
 
