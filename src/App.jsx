@@ -1,6 +1,13 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const weddingDate = new Date('2026-09-24T18:00:00+08:00');
+const weddingVenue = '四川省资中县喜悦玫瑰花语宴会中心';
+const amapSearchParams = `keyword=${encodeURIComponent(weddingVenue)}&city=${encodeURIComponent('内江市')}&view=map`;
+const amapUrl = `https://uri.amap.com/search?${amapSearchParams}&callnative=1`;
+const amapKey = '2c4e88f3b767db0de947d306d17b7b7c';
+const amapSecurityCode = '04344977613a3a9c257ced37751adc5a';
+const defaultVenuePosition = [104.851, 29.772];
+let amapLoader;
 
 const photos = [
   'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80',
@@ -10,6 +17,31 @@ const photos = [
   'https://images.unsplash.com/photo-1460364157752-926555421a7e?auto=format&fit=crop&w=900&q=80',
   'https://images.unsplash.com/photo-1474552226712-ac0f0961a954?auto=format&fit=crop&w=900&q=80',
 ];
+
+function loadAmap() {
+  if (window.AMap) {
+    return Promise.resolve(window.AMap);
+  }
+
+  if (amapLoader) {
+    return amapLoader;
+  }
+
+  window._AMapSecurityConfig = {
+    securityJsCode: amapSecurityCode,
+  };
+
+  amapLoader = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = `https://webapi.amap.com/maps?v=2.0&key=${amapKey}&plugin=AMap.Geocoder,AMap.Scale,AMap.ToolBar`;
+    script.async = true;
+    script.onload = () => resolve(window.AMap);
+    script.onerror = () => reject(new Error('高德地图加载失败'));
+    document.head.appendChild(script);
+  });
+
+  return amapLoader;
+}
 
 function Countdown() {
   const [timeLeft, setTimeLeft] = useState(() => weddingDate - new Date());
@@ -45,6 +77,76 @@ function Countdown() {
   );
 }
 
+function WeddingMap() {
+  const mapRef = useRef(null);
+  const [mapTip, setMapTip] = useState('地图加载中...');
+
+  useEffect(() => {
+    let map;
+    let cancelled = false;
+
+    loadAmap()
+      .then((AMap) => {
+        if (cancelled || !mapRef.current) return;
+
+        map = new AMap.Map(mapRef.current, {
+          zoom: 16,
+          center: defaultVenuePosition,
+          viewMode: '2D',
+          resizeEnable: true,
+        });
+
+        map.addControl(new AMap.Scale());
+        map.addControl(new AMap.ToolBar({ position: 'RB' }));
+
+        const placeMarker = (position) => {
+          const marker = new AMap.Marker({
+            position,
+            title: weddingVenue,
+          });
+
+          map.add(marker);
+          map.setZoomAndCenter(17, position);
+          setMapTip('');
+        };
+
+        const geocoder = new AMap.Geocoder({
+          city: '内江市',
+        });
+
+        geocoder.getLocation(weddingVenue, (status, result) => {
+          if (cancelled) return;
+
+          const location = result?.geocodes?.[0]?.location;
+          if (status === 'complete' && location) {
+            placeMarker([location.lng, location.lat]);
+            return;
+          }
+
+          placeMarker(defaultVenuePosition);
+          setMapTip('已显示资中县附近，点击下方按钮可在高德中查看精确地点');
+        });
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setMapTip('地图暂时无法加载，请点击下方按钮打开高德地图');
+        }
+      });
+
+    return () => {
+      cancelled = true;
+      map?.destroy();
+    };
+  }, []);
+
+  return (
+    <>
+      <div className="wedding-map" ref={mapRef} aria-label="婚礼地点地图" />
+      {mapTip && <p className="map-tip">{mapTip}</p>}
+    </>
+  );
+}
+
 export default function App() {
   return (
     <div className="page">
@@ -52,7 +154,7 @@ export default function App() {
         <p className="domain">wgxhl.space</p>
         <h1>王刚 & 谢何丽</h1>
         <p className="subtitle">诚挚邀请您参加我们的婚礼</p>
-        <p className="date">2026年9月24日 · 18:00 · 杭州西子湖四季酒店</p>
+        <p className="date">2026年9月24日 · 18:00 · 喜悦玫瑰花语宴会中心</p>
         <a className="btn" href="#rsvp">立即 RSVP</a>
       </header>
 
@@ -60,7 +162,7 @@ export default function App() {
         <h2>婚礼信息</h2>
         <ul className="info-list">
           <li><strong>婚礼时间：</strong>2026年9月24日（周四）18:00</li>
-          <li><strong>婚礼地点：</strong>杭州西子湖四季酒店 · 湖畔宴会厅</li>
+          <li><strong>婚礼地点：</strong>{weddingVenue}</li>
           <li><strong>着装建议：</strong>优雅正式 / 浅色系</li>
         </ul>
       </section>
@@ -72,13 +174,12 @@ export default function App() {
 
       <section className="section glass">
         <h2>婚礼地图</h2>
-        <div className="map-wrap">
-          <iframe
-            title="婚礼地图"
-            src="https://www.openstreetmap.org/export/embed.html?bbox=120.1207%2C30.2334%2C120.1507%2C30.2534&layer=mapnik&marker=30.2434%2C120.1357"
-            loading="lazy"
-            allowFullScreen
-          />
+        <div className="map-wrap" aria-label="婚礼地点导航">
+          <WeddingMap />
+          <p className="map-address">{weddingVenue}</p>
+          <a className="btn map-btn" href={amapUrl} target="_blank" rel="noreferrer">
+            打开高德地图导航
+          </a>
         </div>
       </section>
 
