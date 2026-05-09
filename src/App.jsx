@@ -21,9 +21,14 @@ const photos = [
 
 const petals = Array.from({ length: 16 }, (_, index) => ({
   id: index,
+  image: `/petal-${(index % 3) + 1}.png`,
   left: `${(index * 17) % 100}%`,
+  drift: `${index % 2 === 0 ? 1 : -1}px`,
+  scale: (0.38 + (index % 5) * 0.08).toFixed(2),
+  opacity: (0.72 + (index % 4) * 0.06).toFixed(2),
+  rotate: `${(index * 37) % 180}deg`,
   delay: `${(index % 8) * 0.75}s`,
-  duration: `${9 + (index % 5)}s`,
+  duration: `${10 + (index % 6)}s`,
 }));
 
 function loadAmap() {
@@ -167,7 +172,16 @@ function Petals() {
         <span
           className="petal"
           key={petal.id}
-          style={{ left: petal.left, animationDelay: petal.delay, animationDuration: petal.duration }}
+          style={{
+            '--petal-image': `url(${petal.image})`,
+            '--petal-drift': petal.drift,
+            '--petal-scale': petal.scale,
+            '--petal-opacity': petal.opacity,
+            '--petal-rotate': petal.rotate,
+            left: petal.left,
+            animationDelay: petal.delay,
+            animationDuration: petal.duration,
+          }}
         />
       ))}
     </div>
@@ -192,10 +206,7 @@ export default function App() {
           <p className="subtitle">诚挚邀请您见证我们的幸福时刻</p>
 
           <div className="portrait-frame" aria-label="新人合影剪影">
-            <div className="couple-silhouette">
-              <span className="groom" />
-              <span className="bride" />
-            </div>
+            <img className="couple-photo" src="/couple-photo.JPG" alt="王刚和谢何丽婚纱照" />
             <span className="gold-heart">♥</span>
           </div>
 
