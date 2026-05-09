@@ -1,28 +1,98 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-const weddingDate = new Date('2026-09-24T18:00:00+08:00');
-const weddingVenue = '四川省资中县喜悦玫瑰花语宴会中心';
-const amapSearchParams = `keyword=${encodeURIComponent(weddingVenue)}&city=${encodeURIComponent('内江市')}&view=map`;
-const amapUrl = `https://uri.amap.com/search?${amapSearchParams}&callnative=1`;
+const weddingDate = new Date('2026-09-24T12:00:00+08:00');
+const weddingVenue = '元坝子';
+const amapPoiId = 'B072800CZO';
+const defaultVenuePosition = [104.5317122340202, 29.80980960267427];
+const amapUrl = 'https://surl.amap.com/1W8bjcaR23B';
 const amapKey = '2c4e88f3b767db0de947d306d17b7b7c';
 const amapSecurityCode = '04344977613a3a9c257ced37751adc5a';
-const defaultVenuePosition = [104.851, 29.772];
 const venueMapZoom = 15;
 const musicSrc = '/wedding-music.mp3';
+const weddingAddress = '资中县 · 罗泉镇';
+const groomPhone = '15828839312';
+const bridePhone = '15883294178';
 let amapLoader;
 
-const photos = [
-  'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1460364157752-926555421a7e?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1474552226712-ac0f0961a954?auto=format&fit=crop&w=900&q=80',
+const storyTimeline = [
+  {
+    type: 'hero',
+    label: '01',
+    image: '/optimized/gallery/IMGL4578.webp',
+    alt: '海边新郎亲吻新娘手背',
+    title: '海风轻轻，心动有了名字',
+    text: '亲密对望的瞬间，作为故事的开篇。',
+  },
+  {
+    type: 'duo',
+    label: '02',
+    title: '从目光相遇，到并肩看海',
+    items: [
+      {
+        image: '/optimized/gallery/IMGL4513.webp',
+        alt: '蓝色礼服新娘回眸',
+      },
+      {
+        image: '/optimized/gallery/IMGL4519.webp',
+        alt: '新人湖边挥手',
+      },
+    ],
+  },
+  {
+    type: 'wide',
+    label: '03',
+    image: '/optimized/gallery/IMGL4693.webp',
+    alt: '室内求婚画面',
+    title: '把余生，轻轻交给你',
+  },
+  {
+    type: 'duo',
+    title: '那一晚，灯光很暖，答案很坚定',
+    items: [
+      {
+        image: '/optimized/gallery/proposal.webp',
+        alt: '夜晚布置现场单膝求婚',
+      },
+      {
+        image: '/optimized/gallery/proposal-ring.webp',
+        alt: '求婚成功后的拥抱和戒指',
+      },
+    ],
+  },
+  {
+    type: 'duo',
+    label: '04',
+    title: '晚风与城市，也收藏我们的默契',
+    items: [
+      {
+        image: '/optimized/gallery/IMGL4914.webp',
+        alt: '桥边黑裙情侣照',
+      },
+      {
+        image: '/optimized/gallery/IMGL4938.webp',
+        alt: '新郎黑西装肖像',
+      },
+    ],
+  },
+  {
+    type: 'cinema',
+    label: '05',
+    image: '/optimized/gallery/IMGL4949.webp',
+    alt: '桥下光影电影感婚纱照',
+    title: '温暖时光，静谧相伴',
+  },
+  {
+    type: 'wide',
+    label: '06',
+    image: '/optimized/gallery/IMGL5105.webp',
+    alt: '夕阳下新郎抱起新娘',
+    title: '故事未完，婚礼现场继续',
+  },
 ];
 
 const petals = Array.from({ length: 16 }, (_, index) => ({
   id: index,
-  image: `/petal-${(index % 3) + 1}.png`,
+  image: `/optimized/petal-${(index % 3) + 1}.webp`,
   left: `${(index * 17) % 100}%`,
   drift: `${index % 2 === 0 ? 1 : -1}px`,
   scale: (0.38 + (index % 5) * 0.08).toFixed(2),
@@ -47,7 +117,7 @@ function loadAmap() {
 
   amapLoader = new Promise((resolve, reject) => {
     const script = document.createElement('script');
-    script.src = `https://webapi.amap.com/maps?v=2.0&key=${amapKey}&plugin=AMap.Geocoder,AMap.Scale,AMap.ToolBar`;
+    script.src = `https://webapi.amap.com/maps?v=2.0&key=${amapKey}&plugin=AMap.Scale,AMap.ToolBar`;
     script.async = true;
     script.onload = () => resolve(window.AMap);
     script.onerror = () => reject(new Error('高德地图加载失败'));
@@ -96,6 +166,60 @@ function Countdown() {
   );
 }
 
+function WeddingCalendar() {
+  const year = weddingDate.getFullYear();
+  const month = weddingDate.getMonth();
+  const weddingDay = weddingDate.getDate();
+  const hour = String(weddingDate.getHours()).padStart(2, '0');
+  const minute = String(weddingDate.getMinutes()).padStart(2, '0');
+  const weekDay = new Intl.DateTimeFormat('zh-CN', { weekday: 'long' }).format(weddingDate);
+  const monthDays = new Date(year, month + 1, 0).getDate();
+  const firstDay = new Date(year, month, 1).getDay();
+  const leadingBlanks = (firstDay + 6) % 7;
+  const calendarCells = [
+    ...Array.from({ length: leadingBlanks }, (_, index) => ({ id: `blank-${index}`, day: null })),
+    ...Array.from({ length: monthDays }, (_, index) => ({ id: `day-${index + 1}`, day: index + 1 })),
+  ];
+
+  return (
+    <section className="section calendar-section" aria-label="婚礼日历">
+      <header className="section-title">
+        <span>Save the Date</span>
+        <h2>婚礼日历</h2>
+      </header>
+
+      <div className="date-summary">
+        <div className="date-line">
+          {year}年 {month + 1}月 {weddingDay}日 {hour}:{minute}
+        </div>
+        <p>农历：八月十四 {weekDay}</p>
+      </div>
+
+      <div className="calendar-card">
+        <div className="calendar-month">
+          <strong>{year}</strong>
+          <span>/</span>
+          <strong>{month + 1}月</strong>
+        </div>
+        <div className="calendar-weekdays" aria-hidden="true">
+          {['周一', '周二', '周三', '周四', '周五', '周六', '周日'].map((day) => (
+            <span key={day}>{day}</span>
+          ))}
+        </div>
+        <div className="calendar-grid">
+          {calendarCells.map((cell) => (
+            <span className={cell.day === weddingDay ? 'is-wedding-day' : ''} key={cell.id}>
+              {cell.day}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <p className="calendar-wish">把这一天，留给我们的名字</p>
+    </section>
+  );
+}
+
 function WeddingMap() {
   const mapRef = useRef(null);
   const [mapTip, setMapTip] = useState('地图加载中...');
@@ -129,22 +253,7 @@ function WeddingMap() {
           setMapTip('');
         };
 
-        const geocoder = new AMap.Geocoder({
-          city: '内江市',
-        });
-
-        geocoder.getLocation(weddingVenue, (status, result) => {
-          if (cancelled) return;
-
-          const location = result?.geocodes?.[0]?.location;
-          if (status === 'complete' && location) {
-            placeMarker([location.lng, location.lat]);
-            return;
-          }
-
-          placeMarker(defaultVenuePosition);
-          setMapTip('已显示资中县附近，可点击下方按钮在高德中查看精确地点');
-        });
+        placeMarker(defaultVenuePosition);
       })
       .catch(() => {
         if (!cancelled) {
@@ -192,57 +301,7 @@ function Petals() {
 export default function App() {
   const audioRef = useRef(null);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
-
-  useEffect(() => {
-    let animationFrame;
-    let startTime;
-    let isCancelled = false;
-    const startDelay = 1200;
-    const scrollDuration = 42000;
-    const easing = 0.075;
-
-    const cancelAutoScroll = () => {
-      isCancelled = true;
-      if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
-      }
-    };
-
-    const step = (timestamp) => {
-      if (isCancelled) return;
-      if (!startTime) startTime = timestamp;
-
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      if (maxScroll <= 0) return;
-
-      const progress = Math.min((timestamp - startTime) / scrollDuration, 1);
-      const target = maxScroll * progress;
-      const current = window.scrollY || document.documentElement.scrollTop;
-      const next = current + (target - current) * easing;
-      document.documentElement.scrollTop = next;
-      document.body.scrollTop = next;
-
-      if (progress < 1) {
-        animationFrame = requestAnimationFrame(step);
-      }
-    };
-
-    const startTimer = window.setTimeout(() => {
-      animationFrame = requestAnimationFrame(step);
-    }, startDelay);
-
-    window.addEventListener('wheel', cancelAutoScroll, { passive: true, once: true });
-    window.addEventListener('touchstart', cancelAutoScroll, { passive: true, once: true });
-    window.addEventListener('keydown', cancelAutoScroll, { once: true });
-
-    return () => {
-      window.clearTimeout(startTimer);
-      cancelAutoScroll();
-      window.removeEventListener('wheel', cancelAutoScroll);
-      window.removeEventListener('touchstart', cancelAutoScroll);
-      window.removeEventListener('keydown', cancelAutoScroll);
-    };
-  }, []);
+  const [showMusicPrompt, setShowMusicPrompt] = useState(true);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -271,15 +330,32 @@ export default function App() {
     };
   }, []);
 
+  const playMusic = () => {
+    const audio = audioRef.current;
+    if (!audio) return Promise.resolve(false);
+
+    return audio
+      .play()
+      .then(() => {
+        setIsMusicPlaying(true);
+        return true;
+      })
+      .catch(() => {
+        setIsMusicPlaying(false);
+        return false;
+      });
+  };
+
+  const startInvitation = () => {
+    playMusic().finally(() => setShowMusicPrompt(false));
+  };
+
   const toggleMusic = () => {
     const audio = audioRef.current;
     if (!audio) return;
 
     if (audio.paused) {
-      audio
-        .play()
-        .then(() => setIsMusicPlaying(true))
-        .catch(() => setIsMusicPlaying(false));
+      playMusic();
       return;
     }
 
@@ -291,6 +367,15 @@ export default function App() {
     <div className="page">
       <Petals />
       <audio ref={audioRef} src={musicSrc} loop autoPlay playsInline preload="auto" />
+      {showMusicPrompt && (
+        <div className="music-gate" role="dialog" aria-modal="true" aria-label="开启背景音乐">
+          <button className="music-gate-button" type="button" onClick={startInvitation}>
+            <span className="music-gate-icon" aria-hidden="true">♪</span>
+            <span>点击开启音乐</span>
+            <small>进入我们的婚礼邀请函</small>
+          </button>
+        </div>
+      )}
       <main className="invitation-card">
         <span className="decorative-flower flower-left" aria-hidden="true" />
         <span className="decorative-flower flower-right" aria-hidden="true" />
@@ -311,7 +396,7 @@ export default function App() {
           <p className="subtitle">诚挚邀请您见证我们的幸福时刻</p>
 
           <div className="portrait-frame" aria-label="新人合影剪影">
-            <img className="couple-photo" src="/couple-photo.JPG" alt="王刚和谢何丽婚纱照" />
+            <img className="couple-photo" src="/optimized/couple-photo.webp" alt="王刚和谢何丽婚纱照" />
             <span className="gold-heart">♥</span>
           </div>
 
@@ -338,14 +423,14 @@ export default function App() {
           <article>
             <span className="detail-icon">◷</span>
             <p>婚礼时间</p>
-            <strong>18:00</strong>
-            <small>晚宴启席</small>
+            <strong>12:00</strong>
+            <small>午宴启席</small>
           </article>
           <article>
             <span className="detail-icon">⌖</span>
             <p>婚礼地点</p>
-            <strong>喜悦玫瑰花语</strong>
-            <small>宴会中心</small>
+            <strong>罗泉镇</strong>
+            <small>共和村</small>
           </article>
         </section>
 
@@ -361,23 +446,91 @@ export default function App() {
           </p>
         </section>
 
-        <section className="section soft-panel" id="gallery">
+        <section className="section soft-panel photo-story-section" id="gallery">
           <h2>照片墙</h2>
-          <div className="gallery">
-            {photos.map((photo, index) => (
-              <img key={photo} src={photo} alt={`新人回忆 ${index + 1}`} loading="lazy" />
-            ))}
+          <header className="storyHeader">
+            <span>Our Story</span>
+            <h2>爱的轨迹</h2>
+            <p>记录我们从心动到相守的每一步</p>
+          </header>
+          <div className="storyGallery">
+            {storyTimeline.map((block, index) => {
+              if (block.type === 'quote') {
+                return (
+                  <div className="storyQuote" key={`${block.type}-${index}`}>
+                    <p>{block.text}</p>
+                  </div>
+                );
+              }
+
+              if (block.type === 'duo' || block.type === 'stagger') {
+                return (
+                  <div className={`storyDuo ${block.type === 'stagger' ? 'storyStagger' : ''}`} key={`${block.type}-${index}`}>
+                    {block.items.map((item) => (
+                      <figure className="storyCard" key={item.image}>
+                        <img src={item.image} alt={item.alt} loading="lazy" />
+                      </figure>
+                    ))}
+                    <p className="storyCaption">{block.title}</p>
+                  </div>
+                );
+              }
+
+              if (block.type === 'ending') {
+                return (
+                  <div className="storyEnding" key={`${block.type}-${index}`}>
+                    <p>{block.text}</p>
+                  </div>
+                );
+              }
+
+              return (
+                <figure className={`storyCard story${block.type[0].toUpperCase()}${block.type.slice(1)}`} key={block.image}>
+                  <img src={block.image} alt={block.alt} loading={index === 0 ? 'eager' : 'lazy'} />
+                  <figcaption>
+                    <strong>{block.title}</strong>
+                    {block.text && <span>{block.text}</span>}
+                  </figcaption>
+                </figure>
+              );
+            })}
           </div>
         </section>
 
-        <section className="section soft-panel" id="map">
+        <WeddingCalendar />
+
+        <section className="section venue-section" id="map">
           <h2>婚礼地图</h2>
           <div className="map-wrap" aria-label="婚礼地点导航">
-            <WeddingMap />
+          <header className="section-title">
+            <span>The Venue</span>
+            <h2>婚礼地图</h2>
+          </header>
+          <div className="venue-card" aria-label="婚礼地点导航">
+            <div className="venue-info">
+              <span className="venue-ornament" aria-hidden="true">♡</span>
+              <h3>{weddingVenue}</h3>
+              <p>{weddingAddress}</p>
+            </div>
+            <div className="map-frame">
+              <WeddingMap />
+            </div>
             <p className="map-address">{weddingVenue}</p>
             <a className="btn map-btn" href={amapUrl} target="_blank" rel="noreferrer">
               打开高德地图导航
             </a>
+            <div className="contact-actions" aria-label="联系新人">
+              <a className={`contact-btn ${groomPhone ? '' : 'is-disabled'}`} href={groomPhone ? `tel:${groomPhone}` : '#map'}>
+                <span aria-hidden="true">☎</span>
+                联系新郎
+              </a>
+              <a className={`contact-btn ${bridePhone ? '' : 'is-disabled'}`} href={bridePhone ? `tel:${bridePhone}` : '#map'}>
+                <span aria-hidden="true">☎</span>
+                联系新娘
+              </a>
+            </div>
+            <p className="venue-note">诚挚邀请您出席，见证我们的幸福时刻</p>
+          </div>
           </div>
         </section>
 
