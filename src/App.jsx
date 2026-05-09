@@ -197,8 +197,8 @@ export default function App() {
     let animationFrame;
     let startTime;
     let isCancelled = false;
-    const startDelay = 2200;
-    const scrollDuration = 62000;
+    const startDelay = 1200;
+    const scrollDuration = 42000;
     const easing = 0.075;
 
     const cancelAutoScroll = () => {
