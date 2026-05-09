@@ -19,6 +19,13 @@ const photos = [
   'https://images.unsplash.com/photo-1474552226712-ac0f0961a954?auto=format&fit=crop&w=900&q=80',
 ];
 
+const petals = Array.from({ length: 16 }, (_, index) => ({
+  id: index,
+  left: `${(index * 17) % 100}%`,
+  delay: `${(index % 8) * 0.75}s`,
+  duration: `${9 + (index % 5)}s`,
+}));
+
 function loadAmap() {
   if (window.AMap) {
     return Promise.resolve(window.AMap);
@@ -66,7 +73,12 @@ function Countdown() {
   return (
     <>
       <div className="countdown-grid" aria-label="距离婚礼开始的倒计时">
-        {[['天', days], ['时', hours], ['分', minutes], ['秒', seconds]].map(([label, value]) => (
+        {[
+          ['天', days],
+          ['时', hours],
+          ['分', minutes],
+          ['秒', seconds],
+        ].map(([label, value]) => (
           <div className="time-card" key={label}>
             <div className="time-value">{String(value).padStart(2, '0')}</div>
             <div className="time-label">{label}</div>
@@ -125,7 +137,7 @@ function WeddingMap() {
           }
 
           placeMarker(defaultVenuePosition);
-          setMapTip('已显示资中县附近，点击下方按钮可在高德中查看精确地点');
+          setMapTip('已显示资中县附近，可点击下方按钮在高德中查看精确地点');
         });
       })
       .catch(() => {
@@ -148,56 +160,137 @@ function WeddingMap() {
   );
 }
 
+function Petals() {
+  return (
+    <div className="petals" aria-hidden="true">
+      {petals.map((petal) => (
+        <span
+          className="petal"
+          key={petal.id}
+          style={{ left: petal.left, animationDelay: petal.delay, animationDuration: petal.duration }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <div className="page">
-      <header className="hero section">
-        <p className="domain">wgxhl.space</p>
-        <h1>王刚 & 谢何丽</h1>
-        <p className="subtitle">诚挚邀请您参加我们的婚礼</p>
-        <p className="date">2026年9月24日 · 18:00 · 喜悦玫瑰花语宴会中心</p>
-        <a className="btn" href="#rsvp">立即 RSVP</a>
-      </header>
+      <Petals />
+      <main className="invitation-card">
+        <span className="decorative-flower flower-left" aria-hidden="true" />
+        <span className="decorative-flower flower-right" aria-hidden="true" />
+        <header className="hero section" id="home">
+          <button className="music-button" aria-label="背景音乐">
+            ♪
+          </button>
+          <div className="heart-mark">♥</div>
+          <p className="domain">Wedding Invitation</p>
+          <div className="ornament" aria-hidden="true" />
+          <h1>我们结婚啦</h1>
+          <p className="subtitle">诚挚邀请您见证我们的幸福时刻</p>
 
-      <section className="section glass">
-        <h2>婚礼信息</h2>
-        <ul className="info-list">
-          <li><strong>婚礼时间：</strong>2026年9月24日（周四）18:00</li>
-          <li><strong>婚礼地点：</strong>{weddingVenue}</li>
-          <li><strong>着装建议：</strong>优雅正式 / 浅色系</li>
-        </ul>
-      </section>
+          <div className="portrait-frame" aria-label="新人合影剪影">
+            <div className="couple-silhouette">
+              <span className="groom" />
+              <span className="bride" />
+            </div>
+            <span className="gold-heart">♥</span>
+          </div>
 
-      <section className="section glass">
-        <h2>浪漫倒计时</h2>
-        <Countdown />
-      </section>
+          <div className="names">
+            <div>
+              <strong>王刚</strong>
+              <span>Wang Gang</span>
+            </div>
+            <i>♥</i>
+            <div>
+              <strong>谢何丽</strong>
+              <span>Xie Heli</span>
+            </div>
+          </div>
+        </header>
 
-      <section className="section glass">
-        <h2>婚礼地图</h2>
-        <div className="map-wrap" aria-label="婚礼地点导航">
-          <WeddingMap />
-          <p className="map-address">{weddingVenue}</p>
-          <a className="btn map-btn" href={amapUrl} target="_blank" rel="noreferrer">
-            打开高德地图导航
+        <section className="section wedding-details" aria-label="婚礼信息">
+          <article>
+            <span className="detail-icon">▣</span>
+            <p>婚礼日期</p>
+            <strong>2026.09.24</strong>
+            <small>星期四</small>
+          </article>
+          <article>
+            <span className="detail-icon">◷</span>
+            <p>婚礼时间</p>
+            <strong>18:00</strong>
+            <small>晚宴启席</small>
+          </article>
+          <article>
+            <span className="detail-icon">⌖</span>
+            <p>婚礼地点</p>
+            <strong>喜悦玫瑰花语</strong>
+            <small>宴会中心</small>
+          </article>
+        </section>
+
+        <section className="section soft-panel">
+          <h2>浪漫倒计时</h2>
+          <Countdown />
+        </section>
+
+        <section className="section soft-panel story" id="story">
+          <h2>爱情故事</h2>
+          <p>
+            从相遇到相知，从心动到相守，我们把每一个平凡日子都写成了温柔的章节。愿这一天，有您在场，见证我们把余生交给彼此。
+          </p>
+        </section>
+
+        <section className="section soft-panel" id="gallery">
+          <h2>照片墙</h2>
+          <div className="gallery">
+            {photos.map((photo, index) => (
+              <img key={photo} src={photo} alt={`新人回忆 ${index + 1}`} loading="lazy" />
+            ))}
+          </div>
+        </section>
+
+        <section className="section soft-panel" id="map">
+          <h2>婚礼地图</h2>
+          <div className="map-wrap" aria-label="婚礼地点导航">
+            <WeddingMap />
+            <p className="map-address">{weddingVenue}</p>
+            <a className="btn map-btn" href={amapUrl} target="_blank" rel="noreferrer">
+              打开高德地图导航
+            </a>
+          </div>
+        </section>
+
+        <section className="section rsvp" id="rsvp">
+          <p>诚挚邀请您出席</p>
+          <a className="btn" href="mailto:rsvp@wgxhl.space?subject=婚礼出席确认">
+            回复出席
           </a>
-        </div>
-      </section>
+        </section>
 
-      <section className="section glass">
-        <h2>照片墙</h2>
-        <div className="gallery">
-          {photos.map((photo) => (
-            <img key={photo} src={photo} alt="couple memory" loading="lazy" />
-          ))}
-        </div>
-      </section>
-
-      <section className="section glass" id="rsvp">
-        <h2>RSVP</h2>
-        <p>请于 2026年9月15日前 告知我们您的出席安排。</p>
-        <a className="btn" href="mailto:rsvp@wgxhl.space?subject=婚礼出席确认">点击回复出席</a>
-      </section>
+        <nav className="bottom-nav" aria-label="婚礼邀请导航">
+          <a href="#home">
+            <span>♡</span>
+            关于我们
+          </a>
+          <a href="#story">
+            <span>▧</span>
+            爱情故事
+          </a>
+          <a href="#gallery">
+            <span>♧</span>
+            礼金祝福
+          </a>
+          <a href="#map">
+            <span>✉</span>
+            联系新人
+          </a>
+        </nav>
+      </main>
     </div>
   );
 }
