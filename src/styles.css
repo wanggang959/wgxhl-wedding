@@ -151,7 +151,41 @@ a {
   border: 0;
   border-radius: 50%;
   box-shadow: 0 12px 28px rgba(210, 128, 119, 0.2);
-  animation: pulse 2.4s ease-in-out infinite;
+  cursor: pointer;
+  transition: opacity 0.28s ease, transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+.music-button span {
+  display: block;
+  transform-origin: center;
+}
+
+.music-button.is-playing {
+  opacity: 1;
+  animation: musicSpin 4.6s linear infinite, pulse 2.4s ease-in-out infinite;
+}
+
+.music-button.is-playing span {
+  animation: noteBounce 1.4s ease-in-out infinite;
+}
+
+.music-button.is-paused {
+  opacity: 0.62;
+}
+
+.music-button.is-paused::after {
+  position: absolute;
+  width: 2px;
+  height: 32px;
+  content: "";
+  background: rgba(201, 120, 117, 0.72);
+  border-radius: 999px;
+  transform: rotate(42deg);
+}
+
+.music-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 15px 30px rgba(210, 128, 119, 0.24);
 }
 
 .heart-mark {
@@ -670,6 +704,22 @@ h2 {
   }
   50% {
     transform: scale(1.06);
+  }
+}
+
+@keyframes musicSpin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes noteBounce {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.08);
   }
 }
 

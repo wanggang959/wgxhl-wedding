@@ -8,6 +8,7 @@ const amapKey = '2c4e88f3b767db0de947d306d17b7b7c';
 const amapSecurityCode = '04344977613a3a9c257ced37751adc5a';
 const defaultVenuePosition = [104.851, 29.772];
 const venueMapZoom = 15;
+const musicSrc = '/wedding-music.mp3';
 let amapLoader;
 
 const photos = [
@@ -189,15 +190,114 @@ function Petals() {
 }
 
 export default function App() {
+  const audioRef = useRef(null);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+
+  useEffect(() => {
+    let animationFrame;
+    let startTime;
+    let isCancelled = false;
+    const startDelay = 2200;
+    const scrollDuration = 52000;
+
+    const cancelAutoScroll = () => {
+      isCancelled = true;
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
+    };
+
+    const step = (timestamp) => {
+      if (isCancelled) return;
+      if (!startTime) startTime = timestamp;
+
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (maxScroll <= 0) return;
+
+      const progress = Math.min((timestamp - startTime) / scrollDuration, 1);
+      window.scrollTo({ top: maxScroll * progress });
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(step);
+      }
+    };
+
+    const startTimer = window.setTimeout(() => {
+      animationFrame = requestAnimationFrame(step);
+    }, startDelay);
+
+    window.addEventListener('wheel', cancelAutoScroll, { passive: true, once: true });
+    window.addEventListener('touchstart', cancelAutoScroll, { passive: true, once: true });
+    window.addEventListener('keydown', cancelAutoScroll, { once: true });
+
+    return () => {
+      window.clearTimeout(startTimer);
+      cancelAutoScroll();
+      window.removeEventListener('wheel', cancelAutoScroll);
+      window.removeEventListener('touchstart', cancelAutoScroll);
+      window.removeEventListener('keydown', cancelAutoScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = 0.55;
+    const tryPlay = () => {
+      const playPromise = audio.play();
+
+      if (playPromise) {
+        playPromise
+          .then(() => setIsMusicPlaying(true))
+          .catch(() => setIsMusicPlaying(false));
+      }
+    };
+
+    tryPlay();
+    document.addEventListener('WeixinJSBridgeReady', tryPlay, { once: true });
+    window.addEventListener('touchstart', tryPlay, { once: true });
+    window.addEventListener('click', tryPlay, { once: true });
+
+    return () => {
+      document.removeEventListener('WeixinJSBridgeReady', tryPlay);
+      window.removeEventListener('touchstart', tryPlay);
+      window.removeEventListener('click', tryPlay);
+    };
+  }, []);
+
+  const toggleMusic = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (audio.paused) {
+      audio
+        .play()
+        .then(() => setIsMusicPlaying(true))
+        .catch(() => setIsMusicPlaying(false));
+      return;
+    }
+
+    audio.pause();
+    setIsMusicPlaying(false);
+  };
+
   return (
     <div className="page">
       <Petals />
+      <audio ref={audioRef} src={musicSrc} loop autoPlay playsInline preload="auto" />
       <main className="invitation-card">
         <span className="decorative-flower flower-left" aria-hidden="true" />
         <span className="decorative-flower flower-right" aria-hidden="true" />
         <header className="hero section" id="home">
-          <button className="music-button" aria-label="背景音乐">
-            ♪
+          <button
+            className={`music-button ${isMusicPlaying ? 'is-playing' : 'is-paused'}`}
+            type="button"
+            aria-label={isMusicPlaying ? '暂停背景音乐' : '播放背景音乐'}
+            aria-pressed={isMusicPlaying}
+            onClick={toggleMusic}
+          >
+            <span aria-hidden="true">♪</span>
           </button>
           <div className="heart-mark">♥</div>
           <p className="domain">Wedding Invitation</p>
