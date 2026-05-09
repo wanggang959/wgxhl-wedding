@@ -642,6 +642,9 @@ h2 {
   z-index: 20;
   pointer-events: none;
   overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+  contain: layout paint style;
 }
 
 .petal {
@@ -660,6 +663,8 @@ h2 {
     drop-shadow(0 5px 8px rgba(220, 112, 108, 0.28))
     drop-shadow(0 12px 18px rgba(231, 147, 141, 0.16));
   transform-origin: center;
+  backface-visibility: hidden;
+  will-change: transform;
   animation: petalFall 11s linear infinite;
 }
 
@@ -865,6 +870,17 @@ h2 {
 
   .bottom-nav a {
     font-size: 0.78rem;
+  }
+
+  .petal {
+    filter:
+      saturate(1.35)
+      contrast(1.05)
+      drop-shadow(0 5px 8px rgba(220, 112, 108, 0.22));
+  }
+
+  .petal:nth-child(n + 11) {
+    display: none;
   }
 }
 

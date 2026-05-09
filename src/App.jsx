@@ -198,7 +198,8 @@ export default function App() {
     let startTime;
     let isCancelled = false;
     const startDelay = 2200;
-    const scrollDuration = 52000;
+    const scrollDuration = 62000;
+    const easing = 0.075;
 
     const cancelAutoScroll = () => {
       isCancelled = true;
@@ -215,7 +216,11 @@ export default function App() {
       if (maxScroll <= 0) return;
 
       const progress = Math.min((timestamp - startTime) / scrollDuration, 1);
-      window.scrollTo({ top: maxScroll * progress });
+      const target = maxScroll * progress;
+      const current = window.scrollY || document.documentElement.scrollTop;
+      const next = current + (target - current) * easing;
+      document.documentElement.scrollTop = next;
+      document.body.scrollTop = next;
 
       if (progress < 1) {
         animationFrame = requestAnimationFrame(step);
