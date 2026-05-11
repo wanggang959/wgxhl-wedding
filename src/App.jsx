@@ -196,13 +196,14 @@ function WeddingCalendar() {
   const year = weddingDate.getFullYear();
   const month = weddingDate.getMonth();
   const weddingDay = weddingDate.getDate();
+  const monthNumber = String(month + 1).padStart(2, '0');
+  const dayNumber = String(weddingDay).padStart(2, '0');
   const hour = String(weddingDate.getHours()).padStart(2, '0');
   const minute = String(weddingDate.getMinutes()).padStart(2, '0');
   const weekDay = new Intl.DateTimeFormat('zh-CN', { weekday: 'long' }).format(weddingDate);
-  const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(weddingDate);
   const monthDays = new Date(year, month + 1, 0).getDate();
   const firstDay = new Date(year, month, 1).getDay();
-  const leadingBlanks = (firstDay + 6) % 7;
+  const leadingBlanks = firstDay;
   const calendarCells = [
     ...Array.from({ length: leadingBlanks }, (_, index) => ({ id: `blank-${index}`, day: null })),
     ...Array.from({ length: monthDays }, (_, index) => ({ id: `day-${index + 1}`, day: index + 1 })),
@@ -210,33 +211,38 @@ function WeddingCalendar() {
 
   return (
     <section className="section calendar-section" aria-label="婚礼日历">
-      <header className="section-title">
-        <span>Save the Date</span>
-        <h2>婚礼日历</h2>
-      </header>
+      <div className="calendar-invite-card">
+        <div className="calendar-topline">
+          <figure className="calendar-polaroid calendar-polaroid-groom">
+            <img src="/optimized/gallery/IMGL4651.webp" alt="湖边新郎肖像" loading="lazy" />
+          </figure>
 
-      <div className="date-summary">
-        <span className="date-kicker">Wedding Day</span>
-        <div className="date-emphasis" aria-label={`${month + 1}月${weddingDay}日`}>
-          <span>{String(month + 1).padStart(2, '0')}</span>
-          <i>/</i>
-          <span>{weddingDay}</span>
-        </div>
-        <div className="date-line">
-          {year}年 {month + 1}月 {weddingDay}日 {hour}:{minute}
-        </div>
-        <p>农历：八月十四 {weekDay}</p>
-      </div>
+          <div className="calendar-date-hero">
+            <div className="calendar-kicker">
+              <span aria-hidden="true" />
+              <strong>SAVE THE DATE</strong>
+              <span aria-hidden="true" />
+            </div>
+            <i aria-hidden="true">♥</i>
+            <div className="calendar-big-date" aria-label={`${month + 1}月${weddingDay}日`}>
+              <span>{monthNumber}</span>
+              <em>/</em>
+              <span>{dayNumber}</span>
+            </div>
+            <div className="calendar-year">- {year} -</div>
+            <p>
+              <span>{year}年 {month + 1}月 {weddingDay}日 {hour}:{minute}</span>
+              <span>{weekDay}</span>
+            </p>
+          </div>
 
-      <div className="calendar-card">
-        <span className="calendar-script">{monthName}</span>
-        <div className="calendar-month">
-          <strong>{year}</strong>
-          <span>/</span>
-          <strong>{month + 1}月</strong>
+          <figure className="calendar-polaroid calendar-polaroid-bride">
+            <img src="/optimized/gallery/IMGL4623.webp" alt="湖边新娘肖像" loading="lazy" />
+          </figure>
         </div>
+
         <div className="calendar-weekdays" aria-hidden="true">
-          {['周一', '周二', '周三', '周四', '周五', '周六', '周日'].map((day) => (
+          {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((day) => (
             <span key={day}>{day}</span>
           ))}
         </div>
@@ -247,9 +253,9 @@ function WeddingCalendar() {
             </span>
           ))}
         </div>
-      </div>
 
-      <p className="calendar-wish">把这一天，留给我们的名字</p>
+        <p className="calendar-wish">期待与您共度这一天 ♥</p>
+      </div>
     </section>
   );
 }
@@ -372,7 +378,7 @@ export default function App() {
   useEffect(() => {
     const root = document.documentElement;
     const revealItems = Array.from(
-      document.querySelectorAll('.section:not(.hero), .storyGallery > *, .date-summary, .calendar-card, .venue-card, .rsvp')
+      document.querySelectorAll('.section:not(.hero), .storyGallery > *, .date-summary, .calendar-card, .calendar-invite-card, .venue-card, .rsvp')
     );
 
     root.classList.add('reveal-enabled');
