@@ -516,7 +516,7 @@ export default function App() {
           <p className="subtitle">诚挚邀请您见证我们的幸福时刻</p>
 
           <div className="portrait-frame" aria-label="新人合影剪影">
-            <img className="couple-photo" src="/optimized/couple-photo.webp" alt="王刚和谢何丽婚纱照" />
+            <img className="couple-photo" src="/optimized/couple-photo-4601.webp" alt="王刚和谢何丽湖边婚纱照" />
             <span className="gold-heart">♥</span>
           </div>
 
