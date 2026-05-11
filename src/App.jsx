@@ -39,10 +39,15 @@ const storyTimeline = [
     ],
   },
   {
-    type: 'duo',
+    type: 'proposal',
     label: '03',
     title: '那一晚，灯光很暖，答案很坚定',
+    text: '从藏在身后的花束，到认真说出的承诺，幸福在灯光里被温柔接住。',
     items: [
+      {
+        image: '/optimized/gallery/proposal-3.webp',
+        alt: '求婚现场新郎藏起花束准备惊喜',
+      },
       {
         image: '/optimized/gallery/proposal.webp',
         alt: '夜晚布置现场单膝求婚',
@@ -591,6 +596,24 @@ export default function App() {
                       </figure>
                     ))}
                     <p className="storyCaption">{block.title}</p>
+                  </div>
+                );
+              }
+
+              if (block.type === 'proposal') {
+                return (
+                  <div className="storyProposal" data-label={block.label} key={`${block.type}-${index}`}>
+                    <div className="storyProposalGrid">
+                      {block.items.map((item) => (
+                        <figure className="storyCard storyProposalCard" key={item.image}>
+                          <img src={item.image} alt={item.alt} loading="lazy" />
+                        </figure>
+                      ))}
+                    </div>
+                    <div className="storyTrioCaption storyProposalCaption">
+                      <strong>{block.title}</strong>
+                      <span>{block.text}</span>
+                    </div>
                   </div>
                 );
               }
