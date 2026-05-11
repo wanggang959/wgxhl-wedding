@@ -1546,6 +1546,7 @@ h2 {
   font-family: "STSong", "Songti SC", "Noto Serif SC", serif;
   font-size: 1.02rem;
   letter-spacing: 0.06em;
+  white-space: pre-line;
 }
 
 .storyHero img {

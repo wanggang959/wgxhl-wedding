@@ -61,8 +61,8 @@ const storyTimeline = [
   {
     type: 'wide',
     label: '04',
-    image: '/optimized/gallery/IMGL4693.webp',
-    alt: '室内求婚画面',
+    image: '/optimized/gallery/IMGL5055.webp',
+    alt: '湖边夕阳下的新郎新娘婚纱照',
     title: '把余生，轻轻交给你',
   },
   {
@@ -105,7 +105,7 @@ const storyTimeline = [
     label: '07',
     image: '/optimized/gallery/IMGL4949.webp',
     alt: '桥下光影电影感婚纱照',
-    title: '温暖时光，静谧相伴',
+    title: '在光影交错的人海里\n我们还是走向了彼此',
   },
   {
     type: 'portrait',
