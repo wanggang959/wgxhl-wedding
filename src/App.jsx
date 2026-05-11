@@ -39,14 +39,8 @@ const storyTimeline = [
     ],
   },
   {
-    type: 'wide',
-    label: '03',
-    image: '/optimized/gallery/IMGL4693.webp',
-    alt: '室内求婚画面',
-    title: '把余生，轻轻交给你',
-  },
-  {
     type: 'duo',
+    label: '03',
     title: '那一晚，灯光很暖，答案很坚定',
     items: [
       {
@@ -60,8 +54,35 @@ const storyTimeline = [
     ],
   },
   {
-    type: 'duo',
+    type: 'wide',
     label: '04',
+    image: '/optimized/gallery/IMGL4693.webp',
+    alt: '室内求婚画面',
+    title: '把余生，轻轻交给你',
+  },
+  {
+    type: 'trio',
+    label: '05',
+    title: '晴空与绿意之间，爱意慢慢铺展',
+    text: '把笑意交给风，也把以后交给彼此。',
+    feature: {
+      image: '/optimized/gallery/IMGL4991.webp',
+      alt: '草地与蓝天里的新人婚纱照',
+    },
+    items: [
+      {
+        image: '/optimized/gallery/IMGL4980.webp',
+        alt: '草地里相望的新人婚纱照',
+      },
+      {
+        image: '/optimized/gallery/IMGL4985.webp',
+        alt: '草地里相依的新人婚纱照',
+      },
+    ],
+  },
+  {
+    type: 'duo',
+    label: '06',
     title: '晚风与城市，也收藏我们的默契',
     items: [
       {
@@ -76,16 +97,16 @@ const storyTimeline = [
   },
   {
     type: 'cinema',
-    label: '05',
+    label: '07',
     image: '/optimized/gallery/IMGL4949.webp',
     alt: '桥下光影电影感婚纱照',
     title: '温暖时光，静谧相伴',
   },
   {
-    type: 'wide',
-    label: '06',
-    image: '/optimized/gallery/IMGL5105.webp',
-    alt: '夕阳下新郎抱起新娘',
+    type: 'portrait',
+    label: '08',
+    image: '/optimized/gallery/IMGL4748.webp',
+    alt: '新郎新娘黑色背景婚纱照',
     title: '故事未完，婚礼现场继续',
   },
 ];
@@ -173,6 +194,7 @@ function WeddingCalendar() {
   const hour = String(weddingDate.getHours()).padStart(2, '0');
   const minute = String(weddingDate.getMinutes()).padStart(2, '0');
   const weekDay = new Intl.DateTimeFormat('zh-CN', { weekday: 'long' }).format(weddingDate);
+  const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(weddingDate);
   const monthDays = new Date(year, month + 1, 0).getDate();
   const firstDay = new Date(year, month, 1).getDay();
   const leadingBlanks = (firstDay + 6) % 7;
@@ -189,6 +211,12 @@ function WeddingCalendar() {
       </header>
 
       <div className="date-summary">
+        <span className="date-kicker">Wedding Day</span>
+        <div className="date-emphasis" aria-label={`${month + 1}月${weddingDay}日`}>
+          <span>{String(month + 1).padStart(2, '0')}</span>
+          <i>/</i>
+          <span>{weddingDay}</span>
+        </div>
         <div className="date-line">
           {year}年 {month + 1}月 {weddingDay}日 {hour}:{minute}
         </div>
@@ -196,6 +224,7 @@ function WeddingCalendar() {
       </div>
 
       <div className="calendar-card">
+        <span className="calendar-script">{monthName}</span>
         <div className="calendar-month">
           <strong>{year}</strong>
           <span>/</span>
@@ -298,10 +327,90 @@ function Petals() {
   );
 }
 
+function NavIcon({ name }) {
+  const icons = {
+    home: (
+      <>
+        <path d="M4 10.5 12 4l8 6.5" />
+        <path d="M6.5 9.5V20h11V9.5" />
+        <path d="M10 20v-6h4v6" />
+      </>
+    ),
+    story: (
+      <>
+        <path d="M6 5.5h7a4 4 0 0 1 4 4V19H9a3 3 0 0 0-3 3V5.5Z" />
+        <path d="M6 5.5A3 3 0 0 0 3 8.5V19h6" />
+        <path d="M9 9h4" />
+        <path d="M9 13h5" />
+      </>
+    ),
+    contact: (
+      <>
+        <path d="M7 6.5h10a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-6a3 3 0 0 1 3-3Z" />
+        <path d="m5 9 7 5 7-5" />
+      </>
+    ),
+  };
+
+  return (
+    <svg className="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+      {icons[name]}
+    </svg>
+  );
+}
+
 export default function App() {
   const audioRef = useRef(null);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [showMusicPrompt, setShowMusicPrompt] = useState(true);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const revealItems = Array.from(
+      document.querySelectorAll('.section:not(.hero), .storyGallery > *, .date-summary, .calendar-card, .venue-card, .rsvp')
+    );
+
+    root.classList.add('reveal-enabled');
+    revealItems.forEach((item, index) => {
+      item.classList.add('reveal-item');
+      item.style.setProperty('--reveal-delay', `${Math.min(index % 4, 3) * 90}ms`);
+    });
+
+    if (!('IntersectionObserver' in window)) {
+      revealItems.forEach((item) => item.classList.add('is-visible'));
+
+      return () => {
+        revealItems.forEach((item) => {
+          item.classList.remove('reveal-item', 'is-visible');
+          item.style.removeProperty('--reveal-delay');
+        });
+        root.classList.remove('reveal-enabled');
+      };
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.14 }
+    );
+
+    revealItems.forEach((item) => observer.observe(item));
+
+    return () => {
+      observer.disconnect();
+      revealItems.forEach((item) => {
+        item.classList.remove('reveal-item', 'is-visible');
+        item.style.removeProperty('--reveal-delay');
+      });
+      root.classList.remove('reveal-enabled');
+    };
+  }, []);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -380,6 +489,12 @@ export default function App() {
         <span className="decorative-flower flower-left" aria-hidden="true" />
         <span className="decorative-flower flower-right" aria-hidden="true" />
         <header className="hero section" id="home">
+          <div className="hero-sparkles" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+            <span />
+          </div>
           <button
             className={`music-button ${isMusicPlaying ? 'is-playing' : 'is-paused'}`}
             type="button"
@@ -465,13 +580,38 @@ export default function App() {
 
               if (block.type === 'duo' || block.type === 'stagger') {
                 return (
-                  <div className={`storyDuo ${block.type === 'stagger' ? 'storyStagger' : ''}`} key={`${block.type}-${index}`}>
+                  <div
+                    className={`storyDuo ${block.type === 'stagger' ? 'storyStagger' : ''}`}
+                    data-label={block.label}
+                    key={`${block.type}-${index}`}
+                  >
                     {block.items.map((item) => (
                       <figure className="storyCard" key={item.image}>
                         <img src={item.image} alt={item.alt} loading="lazy" />
                       </figure>
                     ))}
                     <p className="storyCaption">{block.title}</p>
+                  </div>
+                );
+              }
+
+              if (block.type === 'trio') {
+                return (
+                  <div className="storyTrio" data-label={block.label} key={`${block.type}-${index}`}>
+                    <figure className="storyCard storyTrioFeature">
+                      <img src={block.feature.image} alt={block.feature.alt} loading="lazy" />
+                    </figure>
+                    <div className="storyTrioPair">
+                      {block.items.map((item) => (
+                        <figure className="storyCard" key={item.image}>
+                          <img src={item.image} alt={item.alt} loading="lazy" />
+                        </figure>
+                      ))}
+                    </div>
+                    <div className="storyTrioCaption">
+                      <strong>{block.title}</strong>
+                      <span>{block.text}</span>
+                    </div>
                   </div>
                 );
               }
@@ -485,7 +625,11 @@ export default function App() {
               }
 
               return (
-                <figure className={`storyCard story${block.type[0].toUpperCase()}${block.type.slice(1)}`} key={block.image}>
+                <figure
+                  className={`storyCard story${block.type[0].toUpperCase()}${block.type.slice(1)}`}
+                  data-label={block.label}
+                  key={block.image}
+                >
                   <img src={block.image} alt={block.alt} loading={index === 0 ? 'eager' : 'lazy'} />
                   <figcaption>
                     <strong>{block.title}</strong>
@@ -509,15 +653,21 @@ export default function App() {
           <div className="venue-card" aria-label="婚礼地点导航">
             <div className="venue-info">
               <span className="venue-ornament" aria-hidden="true">♡</span>
+              <span className="venue-kicker">Wedding Venue</span>
               <h3>{weddingVenue}</h3>
               <p>{weddingAddress}</p>
             </div>
             <div className="map-frame">
               <WeddingMap />
             </div>
-            <p className="map-address">{weddingVenue}</p>
+            <p className="map-address">
+              <span>婚礼地址</span>
+              {weddingVenue} · {weddingAddress}
+            </p>
             <a className="btn map-btn" href={amapUrl} target="_blank" rel="noreferrer">
-              打开高德地图导航
+              <span className="map-btn-icon" aria-hidden="true">⌖</span>
+              <span>立即导航</span>
+              <i aria-hidden="true">→</i>
             </a>
             <div className="contact-actions" aria-label="联系新人">
               <a className={`contact-btn ${groomPhone ? '' : 'is-disabled'}`} href={groomPhone ? `tel:${groomPhone}` : '#map'}>
@@ -534,8 +684,16 @@ export default function App() {
           </div>
         </section>
 
-        <section className="section rsvp" id="rsvp">
-          <p>诚挚邀请您出席</p>
+        <section className="section rsvp closing-section" id="rsvp">
+          <span className="closing-kicker">With Love</span>
+          <h2>期待与您相见</h2>
+          <p>见证我们的幸福时刻</p>
+          <div className="closing-names" aria-label="新人姓名">
+            <strong>王刚</strong>
+            <i>♡</i>
+            <strong>谢何丽</strong>
+          </div>
+          <time dateTime="2026-09-24T12:00:00+08:00">2026.09.24 · 12:00</time>
           <a className="btn" href="mailto:rsvp@wgxhl.space?subject=婚礼出席确认">
             回复出席
           </a>
@@ -543,19 +701,15 @@ export default function App() {
 
         <nav className="bottom-nav" aria-label="婚礼邀请导航">
           <a href="#home">
-            <span>♡</span>
+            <NavIcon name="home" />
             关于我们
           </a>
           <a href="#story">
-            <span>▧</span>
+            <NavIcon name="story" />
             爱情故事
           </a>
-          <a href="#gallery">
-            <span>♧</span>
-            礼金祝福
-          </a>
           <a href="#map">
-            <span>✉</span>
+            <NavIcon name="contact" />
             联系新人
           </a>
         </nav>
