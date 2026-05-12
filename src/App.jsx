@@ -116,16 +116,47 @@ const storyTimeline = [
   },
 ];
 
-const petals = Array.from({ length: 16 }, (_, index) => ({
+const cinematicScenes = [
+  {
+    id: 'future',
+    image: '/optimized/cinematic/IMGL5133.webp',
+    alt: '夕阳湖边相拥的新郎新娘婚纱照',
+    title: '把未来\n交给彼此',
+    text: '余生很长，我们慢慢走。',
+    tone: 'sunset',
+    align: 'lower-left',
+  },
+  {
+    id: 'city',
+    image: '/optimized/cinematic/IMGL4964.webp',
+    alt: '暖色光影里回眸的新娘婚纱照',
+    title: '在人海与晚风里\n我们终于走向彼此',
+    tone: 'city',
+    align: 'upper-left',
+  },
+  {
+    id: 'beside',
+    image: '/optimized/cinematic/IMGL5105.webp',
+    alt: '湖边新郎抱起新娘的婚纱照',
+    title: '从此\n不再是一个人',
+    text: '有你在身边，就是未来。',
+    tone: 'soft',
+    align: 'upper-left',
+  },
+];
+
+const petals = Array.from({ length: 18 }, (_, index) => ({
   id: index,
   image: `/optimized/petal-${(index % 3) + 1}.webp`,
   left: `${(index * 17) % 100}%`,
-  drift: `${index % 2 === 0 ? 1 : -1}px`,
-  scale: (0.38 + (index % 5) * 0.08).toFixed(2),
-  opacity: (0.72 + (index % 4) * 0.06).toFixed(2),
-  rotate: `${(index * 37) % 180}deg`,
-  delay: `${(index % 8) * 0.75}s`,
-  duration: `${10 + (index % 6)}s`,
+  size: `${48 + (index % 5) * 12}px`,
+  xMid: `${(index % 2 === 0 ? 1 : -1) * (28 + (index % 4) * 14)}px`,
+  xEnd: `${(index % 3 - 1) * (42 + (index % 5) * 10)}px`,
+  scale: (0.42 + (index % 6) * 0.07).toFixed(2),
+  opacity: (0.34 + (index % 5) * 0.08).toFixed(2),
+  rotate: `${(index * 37) % 220}deg`,
+  delay: `${(index % 9) * -1.35}s`,
+  duration: `${14 + (index % 7) * 1.6}s`,
 }));
 
 function loadAmap() {
@@ -324,7 +355,9 @@ function Petals() {
           key={petal.id}
           style={{
             '--petal-image': `url(${petal.image})`,
-            '--petal-drift': petal.drift,
+            '--petal-size': petal.size,
+            '--petal-x-mid': petal.xMid,
+            '--petal-x-end': petal.xEnd,
             '--petal-scale': petal.scale,
             '--petal-opacity': petal.opacity,
             '--petal-rotate': petal.rotate,
@@ -335,6 +368,109 @@ function Petals() {
         />
       ))}
     </div>
+  );
+}
+
+function CinematicScene({ scene }) {
+  return (
+    <section className={`section cinematic-scene cinematic-${scene.tone} cinematic-${scene.align}`} aria-label={scene.title}>
+      <img className="cinematic-image" src={scene.image} alt={scene.alt} loading="lazy" />
+      <div className="cinematic-glow" aria-hidden="true" />
+      <div className="cinematic-petals" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className="cinematic-copy">
+        <span className="cinematic-line" aria-hidden="true" />
+        <h2>
+          {scene.title.split('\n').map((line) => (
+            <span key={line}>{line}</span>
+          ))}
+        </h2>
+        {scene.text && <p>{scene.text}</p>}
+      </div>
+    </section>
+  );
+}
+
+function StoryBlock({ block, index }) {
+  if (block.type === 'quote') {
+    return (
+      <div className="storyQuote">
+        <p>{block.text}</p>
+      </div>
+    );
+  }
+
+  if (block.type === 'duo' || block.type === 'stagger') {
+    return (
+      <div className={`storyDuo ${block.type === 'stagger' ? 'storyStagger' : ''}`} data-label={block.label}>
+        {block.items.map((item) => (
+          <figure className="storyCard" key={item.image}>
+            <img src={item.image} alt={item.alt} loading="lazy" />
+          </figure>
+        ))}
+        <p className="storyCaption">{block.title}</p>
+      </div>
+    );
+  }
+
+  if (block.type === 'proposal') {
+    return (
+      <div className="storyProposal" data-label={block.label}>
+        <div className="storyProposalGrid">
+          {block.items.map((item) => (
+            <figure className="storyCard storyProposalCard" key={item.image}>
+              <img src={item.image} alt={item.alt} loading="lazy" />
+            </figure>
+          ))}
+        </div>
+        <div className="storyTrioCaption storyProposalCaption">
+          <strong>{block.title}</strong>
+          <span>{block.text}</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (block.type === 'trio') {
+    return (
+      <div className="storyTrio" data-label={block.label}>
+        <figure className="storyCard storyTrioFeature">
+          <img src={block.feature.image} alt={block.feature.alt} loading="lazy" />
+        </figure>
+        <div className="storyTrioPair">
+          {block.items.map((item) => (
+            <figure className="storyCard" key={item.image}>
+              <img src={item.image} alt={item.alt} loading="lazy" />
+            </figure>
+          ))}
+        </div>
+        <div className="storyTrioCaption">
+          <strong>{block.title}</strong>
+          <span>{block.text}</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (block.type === 'ending') {
+    return (
+      <div className="storyEnding">
+        <p>{block.text}</p>
+      </div>
+    );
+  }
+
+  return (
+    <figure className={`storyCard story${block.type[0].toUpperCase()}${block.type.slice(1)}`} data-label={block.label}>
+      <img src={block.image} alt={block.alt} loading={index === 0 ? 'eager' : 'lazy'} />
+      <figcaption>
+        <strong>{block.title}</strong>
+        {block.text && <span>{block.text}</span>}
+      </figcaption>
+    </figure>
   );
 }
 
@@ -450,14 +586,32 @@ export default function App() {
     };
   }, []);
 
-  const playMusic = () => {
+  const playMusic = (fadeIn = false) => {
     const audio = audioRef.current;
     if (!audio) return Promise.resolve(false);
+
+    if (fadeIn) {
+      audio.volume = 0;
+    }
 
     return audio
       .play()
       .then(() => {
         setIsMusicPlaying(true);
+        if (fadeIn) {
+          const targetVolume = 0.55;
+          const startedAt = performance.now();
+          const fade = (now) => {
+            const progress = Math.min((now - startedAt) / 1200, 1);
+            audio.volume = targetVolume * progress;
+
+            if (progress < 1) {
+              requestAnimationFrame(fade);
+            }
+          };
+
+          requestAnimationFrame(fade);
+        }
         return true;
       })
       .catch(() => {
@@ -467,7 +621,7 @@ export default function App() {
   };
 
   const startInvitation = () => {
-    playMusic().finally(() => setShowMusicPrompt(false));
+    playMusic(true).finally(() => setShowMusicPrompt(false));
   };
 
   const toggleMusic = () => {
@@ -488,11 +642,17 @@ export default function App() {
       <Petals />
       <audio ref={audioRef} src={musicSrc} loop autoPlay playsInline preload="auto" />
       {showMusicPrompt && (
-        <div className="music-gate" role="dialog" aria-modal="true" aria-label="开启背景音乐">
+        <div className="music-gate opening-screen" role="dialog" aria-modal="true" aria-label="开启我们的故事">
+          <div className="opening-petals" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
           <button className="music-gate-button" type="button" onClick={startInvitation}>
-            <span className="music-gate-icon" aria-hidden="true">♪</span>
-            <span>点击开启音乐</span>
-            <small>进入我们的婚礼邀请函</small>
+            <span className="opening-kicker">Wedding Invitation</span>
+            <strong>王刚 & 谢何丽</strong>
+            <span>点击开启我们的故事</span>
+            <small>2026.09.24</small>
           </button>
         </div>
       )}
@@ -577,96 +737,42 @@ export default function App() {
           <header className="storyHeader">
             <span>Our Story</span>
             <h2>爱的轨迹</h2>
-            <p>记录我们从心动到相守的每一步</p>
+            <p>从心动开始</p>
           </header>
           <div className="storyGallery">
-            {storyTimeline.map((block, index) => {
-              if (block.type === 'quote') {
-                return (
-                  <div className="storyQuote" key={`${block.type}-${index}`}>
-                    <p>{block.text}</p>
-                  </div>
-                );
-              }
+            {storyTimeline.slice(0, 3).map((block, index) => (
+              <StoryBlock block={block} index={index} key={`${block.type}-${block.label}`} />
+            ))}
+          </div>
+        </section>
 
-              if (block.type === 'duo' || block.type === 'stagger') {
-                return (
-                  <div
-                    className={`storyDuo ${block.type === 'stagger' ? 'storyStagger' : ''}`}
-                    data-label={block.label}
-                    key={`${block.type}-${index}`}
-                  >
-                    {block.items.map((item) => (
-                      <figure className="storyCard" key={item.image}>
-                        <img src={item.image} alt={item.alt} loading="lazy" />
-                      </figure>
-                    ))}
-                    <p className="storyCaption">{block.title}</p>
-                  </div>
-                );
-              }
+        <CinematicScene scene={cinematicScenes[0]} />
 
-              if (block.type === 'proposal') {
-                return (
-                  <div className="storyProposal" data-label={block.label} key={`${block.type}-${index}`}>
-                    <div className="storyProposalGrid">
-                      {block.items.map((item) => (
-                        <figure className="storyCard storyProposalCard" key={item.image}>
-                          <img src={item.image} alt={item.alt} loading="lazy" />
-                        </figure>
-                      ))}
-                    </div>
-                    <div className="storyTrioCaption storyProposalCaption">
-                      <strong>{block.title}</strong>
-                      <span>{block.text}</span>
-                    </div>
-                  </div>
-                );
-              }
+        <section className="section soft-panel photo-story-section story-continuation">
+          <header className="storyHeader">
+            <span>Chapter Two</span>
+            <h2>并肩而行</h2>
+            <p>把以后慢慢走长</p>
+          </header>
+          <div className="storyGallery">
+            {storyTimeline.slice(3, 7).map((block, index) => (
+              <StoryBlock block={block} index={index + 3} key={`${block.type}-${block.label}`} />
+            ))}
+          </div>
+        </section>
 
-              if (block.type === 'trio') {
-                return (
-                  <div className="storyTrio" data-label={block.label} key={`${block.type}-${index}`}>
-                    <figure className="storyCard storyTrioFeature">
-                      <img src={block.feature.image} alt={block.feature.alt} loading="lazy" />
-                    </figure>
-                    <div className="storyTrioPair">
-                      {block.items.map((item) => (
-                        <figure className="storyCard" key={item.image}>
-                          <img src={item.image} alt={item.alt} loading="lazy" />
-                        </figure>
-                      ))}
-                    </div>
-                    <div className="storyTrioCaption">
-                      <strong>{block.title}</strong>
-                      <span>{block.text}</span>
-                    </div>
-                  </div>
-                );
-              }
+        <CinematicScene scene={cinematicScenes[1]} />
 
-              if (block.type === 'ending') {
-                return (
-                  <div className="storyEnding" key={`${block.type}-${index}`}>
-                    <p>{block.text}</p>
-                  </div>
-                );
-              }
-
-              return (
-                <figure
-                  className={`storyCard story${block.type[0].toUpperCase()}${block.type.slice(1)}`}
-                  data-label={block.label}
-                  key={block.image}
-                >
-                  <img src={block.image} alt={block.alt} loading={index === 0 ? 'eager' : 'lazy'} />
-                  <figcaption>
-                    <strong>{block.title}</strong>
-                    {block.text && <span>{block.text}</span>}
-                  </figcaption>
-                </figure>
-              );
-            })}
+        <section className="section soft-panel photo-story-section story-coda">
+          <header className="storyHeader">
+            <span>From Now On</span>
+            <h2>从此</h2>
+            <p>故事未完</p>
+          </header>
+          <div className="storyGallery">
+            {storyTimeline.slice(7).map((block, index) => (
+              <StoryBlock block={block} index={index + 7} key={`${block.type}-${block.label}`} />
+            ))}
           </div>
         </section>
 
@@ -713,21 +819,6 @@ export default function App() {
           </div>
         </section>
 
-        <section className="section rsvp closing-section" id="rsvp">
-          <span className="closing-kicker">With Love</span>
-          <h2>期待与您相见</h2>
-          <p>见证我们的幸福时刻</p>
-          <div className="closing-names" aria-label="新人姓名">
-            <strong>王刚</strong>
-            <i>♡</i>
-            <strong>谢何丽</strong>
-          </div>
-          <time dateTime="2026-09-24T12:00:00+08:00">2026.09.24 · 12:00</time>
-          <a className="btn" href="mailto:rsvp@wgxhl.space?subject=婚礼出席确认">
-            回复出席
-          </a>
-        </section>
-
         <nav className="bottom-nav" aria-label="婚礼邀请导航">
           <a href="#home">
             <NavIcon name="home" />
@@ -742,6 +833,20 @@ export default function App() {
             联系新人
           </a>
         </nav>
+
+        <CinematicScene scene={cinematicScenes[2]} />
+
+        <section className="section rsvp closing-section" id="rsvp">
+          <span className="closing-kicker">With Love</span>
+          <time className="closing-date" dateTime="2026-09-24T12:00:00+08:00">2026.09.24</time>
+          <p>期待与您相见</p>
+          <span className="closing-note">见证我们的幸福时刻</span>
+          <div className="closing-names" aria-label="新人姓名">
+            <strong>王刚</strong>
+            <i>♡</i>
+            <strong>谢何丽</strong>
+          </div>
+        </section>
       </main>
     </div>
   );
