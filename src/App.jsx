@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 const weddingDate = new Date('2026-09-24T12:00:00+08:00');
-const weddingVenue = '元坝子';
+const weddingVenue = '内江市';
 const amapPoiId = 'B072800CZO';
 const defaultVenuePosition = [104.5317122340202, 29.80980960267427];
 const amapUrl = 'https://surl.amap.com/1W8bjcaR23B';
@@ -555,8 +555,8 @@ export default function App() {
           <article>
             <span className="detail-icon">⌖</span>
             <p>婚礼地点</p>
-            <strong>罗泉镇</strong>
-            <small>共和村</small>
+            <strong>资中县</strong>
+            <small>罗泉镇</small>
           </article>
         </section>
 
@@ -691,7 +691,7 @@ export default function App() {
             </div>
             <p className="map-address">
               <span>婚礼地址</span>
-              {weddingVenue} · {weddingAddress}
+              {weddingAddress} · 元坝子
             </p>
             <a className="btn map-btn" href={amapUrl} target="_blank" rel="noreferrer">
               <span className="map-btn-icon" aria-hidden="true">⌖</span>

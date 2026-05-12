@@ -904,10 +904,12 @@ h2 {
 
 .calendar-grid .is-wedding-day {
   position: relative;
-  color: #fffaf7;
+  color: #7b625b;
   z-index: 0;
+  font-size: 0.82em;
   font-weight: 700;
-  text-shadow: 0 1px 5px rgba(126, 45, 50, 0.2);
+  line-height: 1;
+  text-shadow: 0 1px 4px rgba(255, 255, 255, 0.58);
 }
 
 .calendar-grid .is-wedding-day::before {
@@ -915,14 +917,14 @@ h2 {
   z-index: -1;
   top: 50%;
   left: 50%;
-  width: 54px;
-  height: 50px;
+  width: 58px;
+  height: 54px;
   content: "";
-  background: url("data:image/svg+xml,%3Csvg width='64' height='58' viewBox='0 0 64 58' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M32 54C30 52 6 38 6 21C6 11 13 5 22 5C27 5 30 7 32 11C34 7 38 5 42 5C51 5 58 11 58 21C58 38 34 52 32 54Z' fill='%23d80835'/%3E%3C/svg%3E") center / contain no-repeat;
+  background: url("data:image/svg+xml,%3Csvg width='64' height='58' viewBox='0 0 64 58' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M32 54C30 52 6 38 6 21C6 11 13 5 22 5C27 5 30 7 32 11C34 7 38 5 42 5C51 5 58 11 58 21C58 38 34 52 32 54Z' fill='%23f6cbc1'/%3E%3C/svg%3E") center / contain no-repeat;
   filter:
-    drop-shadow(0 2px 0 rgba(255, 255, 255, 0.65))
-    drop-shadow(0 12px 20px rgba(196, 26, 55, 0.28));
-  transform: translate(-50%, -45%);
+    drop-shadow(0 2px 0 rgba(255, 255, 255, 0.76))
+    drop-shadow(0 10px 18px rgba(198, 128, 111, 0.22));
+  transform: translate(-50%, -46%);
 }
 
 .calendar-grid .is-wedding-day::after {
@@ -1153,7 +1155,7 @@ h2 {
 }
 
 .calendar-invite-card .calendar-grid .is-wedding-day {
-  color: #fffaf7;
+  color: #7b625b;
 }
 
 .calendar-invite-card .calendar-wish {
