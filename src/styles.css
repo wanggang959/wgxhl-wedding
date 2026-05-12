@@ -748,14 +748,15 @@ h2 {
 
 .cinematic-scene {
   --cinematic-inset: clamp(14px, 4.6vw, 22px);
-  --cinematic-caption: clamp(104px, 25vw, 132px);
+  --cinematic-caption: clamp(136px, 32vw, 166px);
+  --cinematic-gap: clamp(18px, 5vw, 28px);
   --cinematic-radius: clamp(26px, 7vw, 36px);
   --cinematic-photo-radius: calc(var(--cinematic-radius) - 10px);
   position: relative;
   display: grid;
   align-items: end;
   width: min(100%, 390px);
-  min-height: clamp(610px, 78svh, 720px);
+  min-height: clamp(640px, 82svh, 740px);
   margin: clamp(76px, 22vw, 118px) auto;
   overflow: visible;
   background:
@@ -776,7 +777,7 @@ h2 {
   left: var(--cinematic-inset);
   z-index: 0;
   width: calc(100% - var(--cinematic-inset) - var(--cinematic-inset));
-  height: calc(100% - var(--cinematic-inset) - var(--cinematic-caption));
+  height: calc(100% - var(--cinematic-inset) - var(--cinematic-caption) - var(--cinematic-gap));
   object-fit: cover;
   object-position: 50% 50%;
   border: 1px solid rgba(255, 255, 255, 0.82);
@@ -798,7 +799,7 @@ h2 {
 }
 
 .cinematic-scene::before {
-  inset: var(--cinematic-inset) var(--cinematic-inset) var(--cinematic-caption);
+  inset: var(--cinematic-inset) var(--cinematic-inset) calc(var(--cinematic-caption) + var(--cinematic-gap)) var(--cinematic-inset);
   z-index: 1;
   border-radius: var(--cinematic-photo-radius);
   background:
@@ -835,20 +836,25 @@ h2 {
   z-index: 3;
   display: grid;
   align-self: end;
-  justify-self: start;
+  justify-self: center;
+  align-content: center;
   gap: 8px;
-  max-width: min(76%, 286px);
-  padding: 0 clamp(30px, 8vw, 42px) clamp(24px, 7vw, 34px);
+  width: calc(100% - var(--cinematic-inset) - var(--cinematic-inset));
+  max-width: none;
+  min-height: var(--cinematic-caption);
+  box-sizing: border-box;
+  padding: 0 clamp(24px, 6vw, 34px) clamp(8px, 2.4vw, 14px);
   color: #7c5b52;
+  text-align: center;
   text-shadow: 0 10px 24px rgba(255, 255, 255, 0.82);
-  transform: translate3d(6px, -3px, 0);
+  transform: translate3d(0, 0, 0);
 }
 
 .cinematic-line {
   display: block;
   width: clamp(38px, 12vw, 58px);
   height: 1px;
-  margin-bottom: 4px;
+  margin: 0 auto 4px;
   background: linear-gradient(90deg, rgba(198, 144, 100, 0.12), rgba(198, 144, 100, 0.76), rgba(198, 144, 100, 0.12));
   box-shadow: 0 0 12px rgba(198, 144, 100, 0.18);
 }
@@ -859,15 +865,17 @@ h2 {
   margin: 0;
   color: inherit;
   font-family: "STSong", "Songti SC", "Noto Serif SC", serif;
-  font-size: clamp(1.18rem, 5.15vw, 1.72rem);
+  font-size: clamp(1.05rem, 4.8vw, 1.58rem);
   font-weight: 400;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.12em;
   line-height: 1.65;
-  text-align: left;
+  text-align: center;
 }
 
 .cinematic-copy h2 span {
-  white-space: nowrap;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 .cinematic-copy p {
@@ -887,26 +895,25 @@ h2 {
 }
 
 .cinematic-upper-left .cinematic-copy {
-  justify-self: start;
-  transform: translate3d(10px, -3px, 0);
+  justify-self: center;
+  transform: translate3d(0, 0, 0);
 }
 
 .cinematic-upper-right .cinematic-copy {
-  justify-self: end;
-  max-width: min(72%, 276px);
-  text-align: right;
-  transform: translate3d(-4px, -3px, 0);
+  justify-self: center;
+  text-align: center;
+  transform: translate3d(0, 0, 0);
 }
 
 .cinematic-upper-right .cinematic-copy h2 {
-  text-align: right;
+  text-align: center;
 }
 
 .cinematic-center-low .cinematic-copy {
   justify-self: center;
   max-width: min(78%, 320px);
   text-align: center;
-  transform: translate3d(0, -3px, 0);
+  transform: translate3d(0, 0, 0);
 }
 
 .cinematic-center-low .cinematic-copy h2 {
@@ -929,13 +936,13 @@ h2 {
 }
 
 .cinematic-city .cinematic-copy {
-  justify-self: end;
-  text-align: right;
-  transform: translate3d(-8px, -3px, 0);
+  justify-self: center;
+  text-align: center;
+  transform: translate3d(0, 0, 0);
 }
 
 .cinematic-city .cinematic-copy h2 {
-  text-align: right;
+  text-align: center;
 }
 
 .cinematic-soft .cinematic-copy {
@@ -966,7 +973,7 @@ h2 {
 
 .cinematic-petals {
   position: absolute;
-  inset: var(--cinematic-inset) var(--cinematic-inset) var(--cinematic-caption);
+  inset: var(--cinematic-inset) var(--cinematic-inset) calc(var(--cinematic-caption) + var(--cinematic-gap)) var(--cinematic-inset);
   z-index: 2;
   pointer-events: none;
   overflow: hidden;
@@ -1991,8 +1998,7 @@ h2 {
 .storyCaption::after,
 .storyHero figcaption::after,
 .storyWide figcaption::after,
-.storyCinema figcaption::after,
-.storyPortrait figcaption::after {
+.storyCinema figcaption::after {
   display: inline-block;
   margin-left: 6px;
   color: #e3a5a1;
@@ -2041,58 +2047,6 @@ h2 {
   box-shadow:
     0 18px 42px rgba(151, 91, 78, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.82);
-}
-
-.storyCard::before,
-.storyDuo::before,
-.storyProposal::before,
-.storyTrio::before {
-  position: absolute;
-  z-index: 4;
-  display: grid;
-  width: 40px;
-  height: 40px;
-  place-items: center;
-  color: #fffaf7;
-  content: attr(data-label);
-  font-family: var(--font-display);
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  background: linear-gradient(145deg, #d8aa70, #c98079);
-  border: 2px solid rgba(255, 255, 255, 0.76);
-  border-radius: 50%;
-  box-shadow: 0 10px 20px rgba(179, 107, 91, 0.2);
-}
-
-.storyCard:not([data-label])::before,
-.storyDuo:not([data-label])::before,
-.storyProposal:not([data-label])::before,
-.storyTrio:not([data-label])::before {
-  display: none;
-}
-
-.storyCard::before {
-  top: 12px;
-  left: 12px;
-}
-
-.storyDuo::before {
-  top: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.storyProposal::before {
-  top: -7px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.storyTrio::before {
-  top: -4px;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 .storyHero,
@@ -2633,16 +2587,16 @@ h2 {
 .closing-section {
   position: relative;
   display: grid;
-  gap: 14px;
-  min-height: clamp(620px, 94vh, 760px);
-  align-content: center;
+  grid-template-rows: minmax(310px, 40vh) auto;
+  gap: 0;
+  min-height: clamp(820px, 110svh, 980px);
+  align-content: stretch;
   justify-items: center;
-  padding: clamp(86px, 24vw, 132px) 18px clamp(92px, 26vw, 146px);
+  padding: clamp(48px, 13vw, 76px) 18px 0;
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 24%, rgba(255, 255, 255, 0.92), transparent 34%),
-    radial-gradient(circle at 16% 82%, rgba(239, 169, 160, 0.17), transparent 26%),
-    linear-gradient(180deg, rgba(255, 252, 249, 0.52), rgba(255, 239, 235, 0.34));
+    linear-gradient(90deg, rgba(255, 224, 218, 0.42), rgba(255, 246, 241, 0.2) 7%, transparent 16%, transparent 84%, rgba(255, 246, 241, 0.2) 93%, rgba(255, 224, 218, 0.42)),
+    linear-gradient(180deg, rgba(255, 253, 250, 0.86), rgba(255, 244, 239, 0.56));
   border: 0;
   border-radius: 0;
   box-shadow: none;
@@ -2656,74 +2610,136 @@ h2 {
 }
 
 .closing-section::before {
-  top: 18%;
-  left: 50%;
-  width: min(78vw, 310px);
-  height: min(78vw, 310px);
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.74), rgba(246, 198, 190, 0.12) 64%, transparent);
-  border: 0;
-  border-radius: 999px;
-  transform: translateX(-50%);
+  inset: 0 auto 0 clamp(8px, 3vw, 16px);
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(236, 185, 173, 0.5) 12%, rgba(236, 185, 173, 0.5) 88%, transparent);
 }
 
 .closing-section::after {
-  right: -24px;
-  bottom: -26px;
-  width: 150px;
-  height: 150px;
-  background: radial-gradient(circle, rgba(244, 190, 184, 0.34), transparent 66%);
-  animation: glowDrift 8.5s var(--ease-soft) infinite;
+  inset: 0 clamp(8px, 3vw, 16px) 0 auto;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(236, 185, 173, 0.5) 12%, rgba(236, 185, 173, 0.5) 88%, transparent);
+  animation: none;
+}
+
+.closing-copy {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  align-self: end;
+  justify-items: center;
+  gap: clamp(12px, 3.4vw, 18px);
+  width: 100%;
+  max-width: 330px;
+  padding-bottom: clamp(4px, 1.8vw, 12px);
+  text-align: center;
 }
 
 .closing-kicker {
   color: #ce9b67;
   font-family: var(--font-script);
-  font-size: 1.62rem;
+  font-size: clamp(1.45rem, 6vw, 1.92rem);
   line-height: 1;
 }
 
 .closing-section p {
   margin: 0;
   color: #8a6860;
-  font-size: clamp(1.25rem, 5.5vw, 1.68rem);
-  letter-spacing: 0.18em;
+  font-size: clamp(1.08rem, 4.6vw, 1.42rem);
+  letter-spacing: 0.2em;
   line-height: 1.8;
 }
 
 .closing-note {
   color: #b48a78;
-  font-size: 0.88rem;
-  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
   line-height: 1.9;
+}
+
+.closing-divider {
+  display: grid;
+  grid-template-columns: minmax(54px, 1fr) auto minmax(54px, 1fr);
+  align-items: center;
+  gap: 14px;
+  width: min(72%, 250px);
+  margin: clamp(4px, 1.8vw, 10px) 0;
+  color: #f1aaa2;
+}
+
+.closing-divider::before,
+.closing-divider::after {
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, transparent, rgba(214, 166, 132, 0.42));
+}
+
+.closing-divider::after {
+  background: linear-gradient(90deg, rgba(214, 166, 132, 0.42), transparent);
+}
+
+.closing-divider span {
+  font-size: 0.95rem;
+  line-height: 1;
 }
 
 .closing-names {
   display: inline-flex;
-  gap: 12px;
+  gap: clamp(14px, 5vw, 26px);
   align-items: center;
-  margin-top: 12px;
-  color: #66544d;
+  margin-top: 0;
+  color: #806a62;
   font-family: "STSong", "Songti SC", "Noto Serif SC", serif;
-  font-size: clamp(1.48rem, 6vw, 1.92rem);
-  letter-spacing: 0.1em;
+  font-size: clamp(1.06rem, 4.8vw, 1.44rem);
+  letter-spacing: 0.14em;
 }
 
 .closing-names i {
   color: #d0a067;
+  font-family: var(--font-script);
+  font-size: 1.3em;
   font-style: normal;
 }
 
 .closing-section time {
   color: #c78078;
   font-family: var(--font-display);
-  font-size: clamp(2.35rem, 12vw, 3.8rem);
+  font-size: clamp(2.02rem, 9.4vw, 3.25rem);
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
+}
+
+.closing-photo {
+  position: relative;
+  z-index: 1;
+  align-self: start;
+  width: min(100% + 36px, 430px);
+  margin: clamp(-14px, -3.5vw, -8px) -18px 0;
+  overflow: hidden;
+}
+
+.closing-photo::before {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  content: "";
+  background:
+    linear-gradient(180deg, rgba(255, 246, 241, 0.82), rgba(255, 246, 241, 0) 14%),
+    linear-gradient(90deg, rgba(255, 242, 237, 0.42), transparent 16%, transparent 84%, rgba(255, 242, 237, 0.42));
+}
+
+.closing-photo img {
+  display: block;
+  width: calc(100% + 18px);
+  max-width: none;
+  height: auto;
+  margin-left: clamp(-54px, -12vw, -42px);
+  filter: sepia(0.02) saturate(0.96) contrast(0.99) brightness(1.03);
 }
 
 .closing-section > * {
   position: relative;
-  z-index: 1;
 }
 
 .bottom-nav {
@@ -3204,14 +3220,15 @@ h2 {
   }
 
   .cinematic-scene {
-    --cinematic-caption: clamp(98px, 26vw, 126px);
-    min-height: clamp(590px, 78svh, 680px);
+    --cinematic-caption: clamp(128px, 34vw, 154px);
+    --cinematic-gap: clamp(18px, 5.6vw, 26px);
+    min-height: clamp(628px, 82svh, 700px);
     margin-block: clamp(64px, 20vw, 96px);
   }
 
   .cinematic-copy {
     max-width: 82%;
-    padding-bottom: clamp(22px, 6vw, 30px);
+    padding-bottom: clamp(8px, 2.5vw, 13px);
   }
 
   .bottom-nav a {

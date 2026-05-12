@@ -17,7 +17,6 @@ let amapLoader;
 const storyTimeline = [
   {
     type: 'hero',
-    label: '01',
     image: '/optimized/gallery/IMGL4578.webp',
     alt: '海边新郎亲吻新娘手背',
     title: '海风轻轻，心动有了名字',
@@ -25,7 +24,6 @@ const storyTimeline = [
   },
   {
     type: 'duo',
-    label: '02',
     title: '从目光相遇，到并肩看海',
     items: [
       {
@@ -40,7 +38,6 @@ const storyTimeline = [
   },
   {
     type: 'proposal',
-    label: '03',
     title: '那一晚，灯光很暖，答案很坚定',
     text: '从藏在身后的花束，到认真说出的承诺，幸福在灯光里被温柔接住。',
     items: [
@@ -60,16 +57,14 @@ const storyTimeline = [
   },
   {
     type: 'wide',
-    label: '04',
     image: '/optimized/gallery/IMGL5055.webp',
     alt: '湖边夕阳下的新郎新娘婚纱照',
-    title: '把余生，轻轻交给你',
+    title: '把平凡日子，慢慢过成浪漫。',
   },
   {
     type: 'trio',
-    label: '05',
     title: '晴空与绿意之间，爱意慢慢铺展',
-    text: '把笑意交给风，也把以后交给彼此。',
+    text: '把笑意交给风，把以后交给你。',
     feature: {
       image: '/optimized/gallery/IMGL4991.webp',
       alt: '草地与蓝天里的新人婚纱照',
@@ -87,8 +82,7 @@ const storyTimeline = [
   },
   {
     type: 'duo',
-    label: '06',
-    title: '晚风与城市，也收藏我们的默契',
+    title: '有你在身边，晚风也温柔',
     items: [
       {
         image: '/optimized/gallery/IMGL4914.webp',
@@ -102,17 +96,15 @@ const storyTimeline = [
   },
   {
     type: 'cinema',
-    label: '07',
     image: '/optimized/gallery/IMGL4949.webp',
     alt: '桥下光影电影感婚纱照',
-    title: '在光影交错的人海里\n我们还是走向了彼此',
+    title: '在光影交错的人生里\n终于找到了你',
   },
   {
     type: 'portrait',
-    label: '08',
     image: '/optimized/gallery/IMGL4748.webp',
     alt: '新郎新娘黑色背景婚纱照',
-    title: '故事未完，婚礼现场继续',
+    title: '',
   },
 ];
 
@@ -121,7 +113,7 @@ const cinematicScenes = [
     id: 'future',
     image: '/optimized/cinematic/IMGL5133.webp',
     alt: '夕阳湖边相拥的新郎新娘婚纱照',
-    title: '把未来\n交给彼此',
+    title: '晚风轻轻吹过\n我们刚好相拥',
     text: '余生很长，我们慢慢走。',
     tone: 'sunset',
     align: 'lower-left',
@@ -130,7 +122,7 @@ const cinematicScenes = [
     id: 'city',
     image: '/optimized/cinematic/IMGL4964.webp',
     alt: '暖色光影里回眸的新娘婚纱照',
-    title: '在人海与晚风里\n我们终于走向彼此',
+    title: '你的那一次回眸\n定格在我们故事的开头',
     tone: 'city',
     align: 'upper-left',
   },
@@ -405,7 +397,7 @@ function StoryBlock({ block, index }) {
 
   if (block.type === 'duo' || block.type === 'stagger') {
     return (
-      <div className={`storyDuo ${block.type === 'stagger' ? 'storyStagger' : ''}`} data-label={block.label}>
+      <div className={`storyDuo ${block.type === 'stagger' ? 'storyStagger' : ''}`}>
         {block.items.map((item) => (
           <figure className="storyCard" key={item.image}>
             <img src={item.image} alt={item.alt} loading="lazy" />
@@ -418,7 +410,7 @@ function StoryBlock({ block, index }) {
 
   if (block.type === 'proposal') {
     return (
-      <div className="storyProposal" data-label={block.label}>
+      <div className="storyProposal">
         <div className="storyProposalGrid">
           {block.items.map((item) => (
             <figure className="storyCard storyProposalCard" key={item.image}>
@@ -436,7 +428,7 @@ function StoryBlock({ block, index }) {
 
   if (block.type === 'trio') {
     return (
-      <div className="storyTrio" data-label={block.label}>
+      <div className="storyTrio">
         <figure className="storyCard storyTrioFeature">
           <img src={block.feature.image} alt={block.feature.alt} loading="lazy" />
         </figure>
@@ -464,12 +456,14 @@ function StoryBlock({ block, index }) {
   }
 
   return (
-    <figure className={`storyCard story${block.type[0].toUpperCase()}${block.type.slice(1)}`} data-label={block.label}>
+    <figure className={`storyCard story${block.type[0].toUpperCase()}${block.type.slice(1)}`}>
       <img src={block.image} alt={block.alt} loading={index === 0 ? 'eager' : 'lazy'} />
-      <figcaption>
-        <strong>{block.title}</strong>
-        {block.text && <span>{block.text}</span>}
-      </figcaption>
+      {(block.title || block.text) && (
+        <figcaption>
+          {block.title && <strong>{block.title}</strong>}
+          {block.text && <span>{block.text}</span>}
+        </figcaption>
+      )}
     </figure>
   );
 }
@@ -741,7 +735,7 @@ export default function App() {
           </header>
           <div className="storyGallery">
             {storyTimeline.slice(0, 3).map((block, index) => (
-              <StoryBlock block={block} index={index} key={`${block.type}-${block.label}`} />
+              <StoryBlock block={block} index={index} key={`${block.type}-${index}`} />
             ))}
           </div>
         </section>
@@ -750,13 +744,13 @@ export default function App() {
 
         <section className="section soft-panel photo-story-section story-continuation">
           <header className="storyHeader">
-            <span>Chapter Two</span>
+            <span>Side by Side</span>
             <h2>并肩而行</h2>
             <p>把以后慢慢走长</p>
           </header>
           <div className="storyGallery">
             {storyTimeline.slice(3, 7).map((block, index) => (
-              <StoryBlock block={block} index={index + 3} key={`${block.type}-${block.label}`} />
+              <StoryBlock block={block} index={index + 3} key={`${block.type}-${index + 3}`} />
             ))}
           </div>
         </section>
@@ -771,7 +765,7 @@ export default function App() {
           </header>
           <div className="storyGallery">
             {storyTimeline.slice(7).map((block, index) => (
-              <StoryBlock block={block} index={index + 7} key={`${block.type}-${block.label}`} />
+              <StoryBlock block={block} index={index + 7} key={`${block.type}-${index + 7}`} />
             ))}
           </div>
         </section>
@@ -837,15 +831,23 @@ export default function App() {
         <CinematicScene scene={cinematicScenes[2]} />
 
         <section className="section rsvp closing-section" id="rsvp">
-          <span className="closing-kicker">With Love</span>
-          <time className="closing-date" dateTime="2026-09-24T12:00:00+08:00">2026.09.24</time>
-          <p>期待与您相见</p>
-          <span className="closing-note">见证我们的幸福时刻</span>
-          <div className="closing-names" aria-label="新人姓名">
-            <strong>王刚</strong>
-            <i>♡</i>
-            <strong>谢何丽</strong>
+          <div className="closing-copy">
+            <span className="closing-kicker">With Love</span>
+            <time className="closing-date" dateTime="2026-09-24T12:00:00+08:00">2026.09.24</time>
+            <p>期待与您相见</p>
+            <span className="closing-note">见证我们的幸福时刻</span>
+            <div className="closing-divider" aria-hidden="true">
+              <span>♥</span>
+            </div>
+            <div className="closing-names" aria-label="新人姓名">
+              <strong>王刚</strong>
+              <i>&</i>
+              <strong>谢何丽</strong>
+            </div>
           </div>
+          <figure className="closing-photo">
+            <img src="/optimized/gallery/IMGL4677-closing.webp" alt="王刚和谢何丽婚纱合影" loading="lazy" />
+          </figure>
         </section>
       </main>
     </div>
