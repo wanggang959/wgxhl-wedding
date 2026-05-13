@@ -2022,14 +2022,7 @@ h2 {
 }
 
 .storyGallery::after {
-  position: absolute;
-  top: 16px;
-  bottom: 16px;
-  left: 50%;
-  z-index: -1;
-  width: 1px;
-  content: "";
-  background: linear-gradient(180deg, transparent, rgba(212, 166, 109, 0.46) 12%, rgba(224, 166, 157, 0.44) 88%, transparent);
+  content: none;
 }
 
 .storyGallery > .storyCard,
