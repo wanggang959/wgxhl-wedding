@@ -2714,7 +2714,7 @@ h2 {
   z-index: 1;
   align-self: start;
   width: min(100% + 36px, 430px);
-  margin: clamp(-14px, -3.5vw, -8px) -18px 0;
+  margin: clamp(18px, 5vw, 34px) -4px 0;
   overflow: hidden;
 }
 
@@ -2725,7 +2725,7 @@ h2 {
   pointer-events: none;
   content: "";
   background:
-    linear-gradient(180deg, rgba(255, 246, 241, 0.82), rgba(255, 246, 241, 0) 14%),
+    linear-gradient(180deg, rgba(255, 246, 241, 0.46), rgba(255, 246, 241, 0) 12%),
     linear-gradient(90deg, rgba(255, 242, 237, 0.42), transparent 16%, transparent 84%, rgba(255, 242, 237, 0.42));
 }
 
@@ -2735,7 +2735,7 @@ h2 {
   max-width: none;
   height: auto;
   margin-left: clamp(-54px, -12vw, -42px);
-  filter: sepia(0.02) saturate(0.96) contrast(0.99) brightness(1.03);
+  filter: sepia(0.01) saturate(0.99) contrast(1.03) brightness(1);
 }
 
 .closing-section > * {
