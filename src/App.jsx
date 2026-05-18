@@ -508,7 +508,7 @@ export default function App() {
   useEffect(() => {
     const root = document.documentElement;
     const revealItems = Array.from(
-      document.querySelectorAll('.section:not(.hero), .storyGallery > *, .date-summary, .calendar-card, .calendar-invite-card, .venue-card, .rsvp')
+      document.querySelectorAll('.section:not(.hero), .storyGallery > *, .date-summary, .calendar-card, .calendar-invite-card, .venue-card, .contact-section, .rsvp')
     );
 
     root.classList.add('reveal-enabled');
@@ -798,15 +798,62 @@ export default function App() {
               <span>立即导航</span>
               <i aria-hidden="true">→</i>
             </a>
-            <div className="contact-actions" aria-label="联系新人">
-              <a className={`contact-btn ${groomPhone ? '' : 'is-disabled'}`} href={groomPhone ? `tel:${groomPhone}` : '#map'}>
-                <span aria-hidden="true">☎</span>
-                联系新郎
-              </a>
-              <a className={`contact-btn ${bridePhone ? '' : 'is-disabled'}`} href={bridePhone ? `tel:${bridePhone}` : '#map'}>
-                <span aria-hidden="true">☎</span>
-                联系新娘
-              </a>
+            <div className="contact-section" aria-label="联系新人">
+              <header className="contact-section-title">
+                <span className="contact-title-deco" aria-hidden="true" />
+                <h3>联系我们</h3>
+                <span className="contact-title-deco contact-title-deco--mirror" aria-hidden="true" />
+              </header>
+              <div className="contact-cards">
+                <article className="contact-card contact-card--groom">
+                  <span className="contact-card-heart contact-card-heart--tl" aria-hidden="true">♥</span>
+                  <span className="contact-card-heart contact-card-heart--tr" aria-hidden="true">♥</span>
+                  <div className="contact-portrait-slot">
+                    <figure className="contact-portrait contact-portrait--groom">
+                      <img src="/IMGL4723.png" alt="新郎王刚" loading="lazy" />
+                      <span className="contact-portrait-heart" aria-hidden="true">♥</span>
+                    </figure>
+                  </div>
+                  <p className="contact-role">
+                    <span aria-hidden="true">❧</span>
+                    新郎
+                    <span aria-hidden="true">❧</span>
+                  </p>
+                  <a
+                    className={`contact-card-btn ${groomPhone ? '' : 'is-disabled'}`}
+                    href={groomPhone ? `tel:${groomPhone}` : '#map'}
+                  >
+                    <svg className="contact-phone-icon" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M6.6 10.8c1.5 2.9 3.7 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.3 21 3 13.7 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" />
+                    </svg>
+                    联系新郎
+                  </a>
+                </article>
+                <article className="contact-card contact-card--bride">
+                  <span className="contact-card-heart contact-card-heart--tl" aria-hidden="true">♥</span>
+                  <span className="contact-card-heart contact-card-heart--tr" aria-hidden="true">♥</span>
+                  <div className="contact-portrait-slot">
+                    <figure className="contact-portrait">
+                      <img src="/IMGL4686.png" alt="新娘谢何丽" loading="lazy" />
+                      <span className="contact-portrait-heart" aria-hidden="true">♥</span>
+                    </figure>
+                  </div>
+                  <p className="contact-role">
+                    <span aria-hidden="true">❧</span>
+                    新娘
+                    <span aria-hidden="true">❧</span>
+                  </p>
+                  <a
+                    className={`contact-card-btn ${bridePhone ? '' : 'is-disabled'}`}
+                    href={bridePhone ? `tel:${bridePhone}` : '#map'}
+                  >
+                    <svg className="contact-phone-icon" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M6.6 10.8c1.5 2.9 3.7 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.3 21 3 13.7 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" />
+                    </svg>
+                    联系新娘
+                  </a>
+                </article>
+              </div>
             </div>
             <p className="venue-note">诚挚邀请您出席，见证我们的幸福时刻</p>
           </div>
