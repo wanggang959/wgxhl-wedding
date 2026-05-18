@@ -326,7 +326,7 @@ a {
   display: grid;
   gap: 13px;
   place-items: center;
-  width: min(82vw, 320px);
+  width: min(92vw, 360px);
   min-height: 300px;
   padding: 54px 24px;
   color: var(--rose);
@@ -357,9 +357,10 @@ a {
 .music-gate-button strong {
   color: #7a5b52;
   font-family: "STSong", "Songti SC", "Noto Serif SC", serif;
-  font-size: clamp(2.1rem, 10vw, 3.25rem);
+  font-size: clamp(1.75rem, 6.8vw, 3.25rem);
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
   text-shadow: 0 14px 34px rgba(158, 88, 80, 0.14);
 }
 
@@ -2717,9 +2718,7 @@ h2 {
   z-index: 1;
   pointer-events: none;
   content: "";
-  background:
-    linear-gradient(180deg, rgba(255, 246, 241, 0.46), rgba(255, 246, 241, 0) 12%),
-    linear-gradient(90deg, rgba(255, 242, 237, 0.42), transparent 16%, transparent 84%, rgba(255, 242, 237, 0.42));
+  background: linear-gradient(90deg, rgba(255, 242, 237, 0.28), transparent 16%, transparent 84%, rgba(255, 242, 237, 0.28));
 }
 
 .closing-photo img {
@@ -2728,7 +2727,9 @@ h2 {
   max-width: none;
   height: auto;
   margin-left: clamp(-54px, -12vw, -42px);
-  filter: sepia(0.01) saturate(0.99) contrast(1.03) brightness(1);
+  object-fit: contain;
+  object-position: center bottom;
+  filter: none;
 }
 
 .closing-section > * {
