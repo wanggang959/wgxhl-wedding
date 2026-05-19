@@ -810,7 +810,9 @@ export default function App() {
                   <span className="contact-card-heart contact-card-heart--tr" aria-hidden="true">♥</span>
                   <div className="contact-portrait-slot">
                     <figure className="contact-portrait contact-portrait--groom">
-                      <img src="/IMGL4723.png" alt="新郎王刚" loading="lazy" />
+                      <span className="contact-portrait-mask">
+                        <img src="/optimized/contact/groom-cutout.webp" alt="新郎王刚" loading="lazy" />
+                      </span>
                       <span className="contact-portrait-heart" aria-hidden="true">♥</span>
                     </figure>
                   </div>
@@ -834,7 +836,9 @@ export default function App() {
                   <span className="contact-card-heart contact-card-heart--tr" aria-hidden="true">♥</span>
                   <div className="contact-portrait-slot">
                     <figure className="contact-portrait">
-                      <img src="/IMGL4686.png" alt="新娘谢何丽" loading="lazy" />
+                      <span className="contact-portrait-mask">
+                        <img src="/optimized/contact/bride-cutout.webp" alt="新娘谢何丽" loading="lazy" />
+                      </span>
                       <span className="contact-portrait-heart" aria-hidden="true">♥</span>
                     </figure>
                   </div>
