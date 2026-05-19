@@ -35,7 +35,9 @@ function shouldSkipWheel(event) {
   return event.target instanceof Element && Boolean(event.target.closest(wheelSkipSelector));
 }
 
-export function useSilkyScroll({ autoScroll = false, autoScrollSpeed = 34 } = {}) {
+const defaultAutoScrollSpeed = __AUTO_SCROLL_SPEED__;
+
+export function useSilkyScroll({ autoScroll = false, autoScrollSpeed = defaultAutoScrollSpeed } = {}) {
   useEffect(() => {
     const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (reduceMotionQuery.matches) return undefined;
@@ -95,7 +97,7 @@ export function useSilkyScroll({ autoScroll = false, autoScrollSpeed = 34 } = {}
         autoLastTime = now;
       }
 
-      const elapsedSeconds = Math.min((now - autoLastTime) / 1000, 0.064);
+      const elapsedSeconds = Math.min((now - autoLastTime) / 1000, 0.04);
       autoLastTime = now;
       autoPosition = clamp(autoPosition + autoScrollSpeed * elapsedSeconds, 0, maxScroll);
       window.scrollTo(0, autoPosition);

@@ -17,6 +17,22 @@ function resolvePublicAssetBaseUrl(mode) {
   );
 }
 
+function resolveAutoScrollSpeed(mode) {
+  const env = loadEnv(mode, process.cwd(), '');
+  const rawSpeed =
+    process.env.AUTO_SCROLL_SPEED ||
+    process.env.VITE_AUTO_SCROLL_SPEED ||
+    env.AUTO_SCROLL_SPEED ||
+    env.VITE_AUTO_SCROLL_SPEED;
+  const speed = Number.parseFloat(rawSpeed);
+
+  if (!Number.isFinite(speed)) {
+    return 42;
+  }
+
+  return Math.min(Math.max(speed, 12), 120);
+}
+
 function publicAssetUrl(path, baseUrl) {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   return `${baseUrl}${normalizedPath}`;
@@ -52,6 +68,7 @@ function renderPreloadLinks(publicAssetBaseUrl) {
 
 export default defineConfig(({ mode }) => {
   const publicAssetBaseUrl = resolvePublicAssetBaseUrl(mode);
+  const autoScrollSpeed = resolveAutoScrollSpeed(mode);
   const preloadLinks = renderPreloadLinks(publicAssetBaseUrl);
 
   return {
@@ -70,6 +87,7 @@ export default defineConfig(({ mode }) => {
     ],
     define: {
       __PUBLIC_ASSET_BASE_URL__: JSON.stringify(publicAssetBaseUrl),
+      __AUTO_SCROLL_SPEED__: JSON.stringify(autoScrollSpeed),
     },
   };
 });
