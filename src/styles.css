@@ -22,6 +22,11 @@
 
 html {
   scroll-behavior: smooth;
+  overscroll-behavior-y: none;
+}
+
+html.silky-scroll {
+  scroll-behavior: auto;
 }
 
 body {
@@ -3109,12 +3114,15 @@ h2 {
 
 .reveal-enabled .reveal-item {
   opacity: 0;
-  transform: translate3d(0, 28px, 0) scale(0.985);
+  filter: blur(8px);
+  backface-visibility: hidden;
+  transform: translate3d(0, 34px, 0) scale(0.982);
   transition:
-    opacity 0.82s var(--ease-soft),
-    transform 0.82s var(--ease-soft);
+    opacity 0.98s var(--ease-soft),
+    filter 0.98s var(--ease-soft),
+    transform 0.98s var(--ease-soft);
   transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
+  will-change: opacity, filter, transform;
 }
 
 .reveal-enabled .storyGallery > .reveal-item {
@@ -3123,6 +3131,7 @@ h2 {
 
 .reveal-enabled .reveal-item.is-visible {
   opacity: 1;
+  filter: blur(0);
   transform: translate3d(0, 0, 0) scale(1);
 }
 

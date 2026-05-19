@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { preloadPublicAssets, publicAsset, publicAssetCssUrl, publicAssetCssVars } from './publicAssets';
+import { useSilkyScroll } from './useSilkyScroll';
 
 const weddingDate = new Date('2026-09-24T12:00:00+08:00');
 const weddingVenue = '内江市';
@@ -505,6 +506,8 @@ export default function App() {
   const audioRef = useRef(null);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [showMusicPrompt, setShowMusicPrompt] = useState(true);
+
+  useSilkyScroll({ autoScroll: !showMusicPrompt });
 
   useEffect(() => {
     preloadPublicAssets();
