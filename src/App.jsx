@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { publicAsset, publicAssetCssUrl, publicAssetCssVars } from './publicAssets';
 
 const weddingDate = new Date('2026-09-24T12:00:00+08:00');
 const weddingVenue = '内江市';
@@ -8,7 +9,7 @@ const amapUrl = 'https://surl.amap.com/1W8bjcaR23B';
 const amapKey = '2c4e88f3b767db0de947d306d17b7b7c';
 const amapSecurityCode = '04344977613a3a9c257ced37751adc5a';
 const venueMapZoom = 15;
-const musicSrc = '/wedding-music.mp3';
+const musicSrc = publicAsset('/wedding-music.mp3');
 const weddingAddress = '资中县 · 罗泉镇';
 const groomPhone = '15828839312';
 const bridePhone = '15883294178';
@@ -17,7 +18,7 @@ let amapLoader;
 const storyTimeline = [
   {
     type: 'hero',
-    image: '/optimized/gallery/IMGL4578.webp',
+    image: publicAsset('/optimized/gallery/IMGL4578.webp'),
     alt: '海边新郎亲吻新娘手背',
     title: '海风轻轻，心动有了名字',
     text: '亲密对望的瞬间，作为故事的开篇。',
@@ -27,11 +28,11 @@ const storyTimeline = [
     title: '从目光相遇，到并肩看海',
     items: [
       {
-        image: '/optimized/gallery/IMGL4513.webp',
+        image: publicAsset('/optimized/gallery/IMGL4513.webp'),
         alt: '蓝色礼服新娘回眸',
       },
       {
-        image: '/optimized/gallery/IMGL4519.webp',
+        image: publicAsset('/optimized/gallery/IMGL4519.webp'),
         alt: '新人湖边挥手',
       },
     ],
@@ -42,22 +43,22 @@ const storyTimeline = [
     text: '从藏在身后的花束，到认真说出的承诺，幸福在灯光里被温柔接住。',
     items: [
       {
-        image: '/optimized/gallery/proposal-3.webp',
+        image: publicAsset('/optimized/gallery/proposal-3.webp'),
         alt: '求婚现场新郎藏起花束准备惊喜',
       },
       {
-        image: '/optimized/gallery/proposal.webp',
+        image: publicAsset('/optimized/gallery/proposal.webp'),
         alt: '夜晚布置现场单膝求婚',
       },
       {
-        image: '/optimized/gallery/proposal-ring.webp',
+        image: publicAsset('/optimized/gallery/proposal-ring.webp'),
         alt: '求婚成功后的拥抱和戒指',
       },
     ],
   },
   {
     type: 'wide',
-    image: '/optimized/gallery/IMGL5055.webp',
+    image: publicAsset('/optimized/gallery/IMGL5055.webp'),
     alt: '湖边夕阳下的新郎新娘婚纱照',
     title: '把平凡日子，慢慢过成浪漫。',
   },
@@ -66,16 +67,16 @@ const storyTimeline = [
     title: '晴空与绿意之间，爱意慢慢铺展',
     text: '把笑意交给风，把以后交给你。',
     feature: {
-      image: '/optimized/gallery/IMGL4991.webp',
+      image: publicAsset('/optimized/gallery/IMGL4991.webp'),
       alt: '草地与蓝天里的新人婚纱照',
     },
     items: [
       {
-        image: '/optimized/gallery/IMGL4980.webp',
+        image: publicAsset('/optimized/gallery/IMGL4980.webp'),
         alt: '草地里相望的新人婚纱照',
       },
       {
-        image: '/optimized/gallery/IMGL4985.webp',
+        image: publicAsset('/optimized/gallery/IMGL4985.webp'),
         alt: '草地里相依的新人婚纱照',
       },
     ],
@@ -85,24 +86,24 @@ const storyTimeline = [
     title: '有你在身边，晚风也温柔',
     items: [
       {
-        image: '/optimized/gallery/IMGL4914.webp',
+        image: publicAsset('/optimized/gallery/IMGL4914.webp'),
         alt: '桥边黑裙情侣照',
       },
       {
-        image: '/optimized/gallery/IMGL4938.webp',
+        image: publicAsset('/optimized/gallery/IMGL4938.webp'),
         alt: '新郎黑西装肖像',
       },
     ],
   },
   {
     type: 'cinema',
-    image: '/optimized/gallery/IMGL4949.webp',
+    image: publicAsset('/optimized/gallery/IMGL4949.webp'),
     alt: '桥下光影电影感婚纱照',
     title: '在光影交错的人生里\n终于找到了你',
   },
   {
     type: 'portrait',
-    image: '/optimized/gallery/IMGL4748.webp',
+    image: publicAsset('/optimized/gallery/IMGL4748.webp'),
     alt: '新郎新娘黑色背景婚纱照',
     title: '',
   },
@@ -111,7 +112,7 @@ const storyTimeline = [
 const cinematicScenes = [
   {
     id: 'future',
-    image: '/optimized/cinematic/IMGL5133.webp',
+    image: publicAsset('/optimized/cinematic/IMGL5133.webp'),
     alt: '夕阳湖边相拥的新郎新娘婚纱照',
     title: '晚风轻轻吹过\n我们刚好相拥',
     text: '余生很长，我们慢慢走。',
@@ -120,7 +121,7 @@ const cinematicScenes = [
   },
   {
     id: 'city',
-    image: '/optimized/cinematic/IMGL4964.webp',
+    image: publicAsset('/optimized/cinematic/IMGL4964.webp'),
     alt: '暖色光影里回眸的新娘婚纱照',
     title: '你的那一次回眸\n定格在我们故事的开头',
     tone: 'city',
@@ -128,7 +129,7 @@ const cinematicScenes = [
   },
   {
     id: 'beside',
-    image: '/optimized/cinematic/IMGL5105.webp',
+    image: publicAsset('/optimized/cinematic/IMGL5105.webp'),
     alt: '湖边新郎抱起新娘的婚纱照',
     title: '从此\n不再是一个人',
     text: '有你在身边，就是未来。',
@@ -139,7 +140,7 @@ const cinematicScenes = [
 
 const petals = Array.from({ length: 18 }, (_, index) => ({
   id: index,
-  image: `/optimized/petal-${(index % 3) + 1}.webp`,
+  image: publicAssetCssUrl(`/optimized/petal-${(index % 3) + 1}.webp`),
   left: `${(index * 17) % 100}%`,
   size: `${48 + (index % 5) * 12}px`,
   xMid: `${(index % 2 === 0 ? 1 : -1) * (28 + (index % 4) * 14)}px`,
@@ -237,7 +238,7 @@ function WeddingCalendar() {
       <div className="calendar-invite-card">
         <div className="calendar-topline">
           <figure className="calendar-polaroid calendar-polaroid-groom">
-            <img src="/optimized/gallery/IMGL4651.webp" alt="湖边新郎肖像" loading="lazy" />
+            <img src={publicAsset('/optimized/gallery/IMGL4651.webp')} alt="湖边新郎肖像" loading="lazy" />
           </figure>
 
           <div className="calendar-date-hero">
@@ -260,7 +261,7 @@ function WeddingCalendar() {
           </div>
 
           <figure className="calendar-polaroid calendar-polaroid-bride">
-            <img src="/optimized/gallery/IMGL4623.webp" alt="湖边新娘肖像" loading="lazy" />
+            <img src={publicAsset('/optimized/gallery/IMGL4623.webp')} alt="湖边新娘肖像" loading="lazy" />
           </figure>
         </div>
 
@@ -346,7 +347,7 @@ function Petals() {
           className="petal"
           key={petal.id}
           style={{
-            '--petal-image': `url(${petal.image})`,
+            '--petal-image': petal.image,
             '--petal-size': petal.size,
             '--petal-x-mid': petal.xMid,
             '--petal-x-end': petal.xEnd,
@@ -632,7 +633,7 @@ export default function App() {
   };
 
   return (
-    <div className="page">
+    <div className="page" style={publicAssetCssVars}>
       <Petals />
       <audio ref={audioRef} src={musicSrc} loop autoPlay playsInline preload="auto" />
       {showMusicPrompt && (
@@ -676,7 +677,7 @@ export default function App() {
           <p className="subtitle">诚挚邀请您见证我们的幸福时刻</p>
 
           <div className="portrait-frame" aria-label="新人合影剪影">
-            <img className="couple-photo" src="/optimized/couple-photo-4601.webp" alt="王刚和谢何丽湖边婚纱照" />
+            <img className="couple-photo" src={publicAsset('/optimized/couple-photo-4601.webp')} alt="王刚和谢何丽湖边婚纱照" />
             <span className="gold-heart">♥</span>
           </div>
 
@@ -811,7 +812,7 @@ export default function App() {
                   <div className="contact-portrait-slot">
                     <figure className="contact-portrait contact-portrait--groom">
                       <span className="contact-portrait-mask">
-                        <img src="/optimized/contact/groom-cutout.webp" alt="新郎王刚" loading="lazy" />
+                        <img src={publicAsset('/optimized/contact/groom-cutout.webp')} alt="新郎王刚" loading="lazy" />
                       </span>
                       <span className="contact-portrait-heart" aria-hidden="true">♥</span>
                     </figure>
@@ -837,7 +838,7 @@ export default function App() {
                   <div className="contact-portrait-slot">
                     <figure className="contact-portrait">
                       <span className="contact-portrait-mask">
-                        <img src="/optimized/contact/bride-cutout.webp" alt="新娘谢何丽" loading="lazy" />
+                        <img src={publicAsset('/optimized/contact/bride-cutout.webp')} alt="新娘谢何丽" loading="lazy" />
                       </span>
                       <span className="contact-portrait-heart" aria-hidden="true">♥</span>
                     </figure>
@@ -897,7 +898,7 @@ export default function App() {
             </div>
           </div>
           <figure className="closing-photo">
-            <img src="/optimized/gallery/IMGL4677-closing.webp" alt="王刚和谢何丽婚纱合影" loading="lazy" />
+            <img src={publicAsset('/optimized/gallery/IMGL4677-closing.webp')} alt="王刚和谢何丽婚纱合影" loading="lazy" />
           </figure>
         </section>
       </main>
