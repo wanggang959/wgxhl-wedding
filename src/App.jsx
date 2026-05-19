@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { publicAsset, publicAssetCssUrl, publicAssetCssVars } from './publicAssets';
+import { preloadPublicAssets, publicAsset, publicAssetCssUrl, publicAssetCssVars } from './publicAssets';
 
 const weddingDate = new Date('2026-09-24T12:00:00+08:00');
 const weddingVenue = '内江市';
@@ -507,6 +507,10 @@ export default function App() {
   const [showMusicPrompt, setShowMusicPrompt] = useState(true);
 
   useEffect(() => {
+    preloadPublicAssets();
+  }, []);
+
+  useEffect(() => {
     const root = document.documentElement;
     const revealItems = Array.from(
       document.querySelectorAll('.section:not(.hero), .storyGallery > *, .date-summary, .calendar-card, .calendar-invite-card, .venue-card, .contact-section, .rsvp')
@@ -559,26 +563,6 @@ export default function App() {
     if (!audio) return;
 
     audio.volume = 0.55;
-    const tryPlay = () => {
-      const playPromise = audio.play();
-
-      if (playPromise) {
-        playPromise
-          .then(() => setIsMusicPlaying(true))
-          .catch(() => setIsMusicPlaying(false));
-      }
-    };
-
-    tryPlay();
-    document.addEventListener('WeixinJSBridgeReady', tryPlay, { once: true });
-    window.addEventListener('touchstart', tryPlay, { once: true });
-    window.addEventListener('click', tryPlay, { once: true });
-
-    return () => {
-      document.removeEventListener('WeixinJSBridgeReady', tryPlay);
-      window.removeEventListener('touchstart', tryPlay);
-      window.removeEventListener('click', tryPlay);
-    };
   }, []);
 
   const playMusic = (fadeIn = false) => {
@@ -635,7 +619,7 @@ export default function App() {
   return (
     <div className="page" style={publicAssetCssVars}>
       <Petals />
-      <audio ref={audioRef} src={musicSrc} loop autoPlay playsInline preload="auto" />
+      <audio ref={audioRef} src={musicSrc} loop playsInline preload="metadata" />
       {showMusicPrompt && (
         <div className="music-gate opening-screen" role="dialog" aria-modal="true" aria-label="开启我们的故事">
           <div className="opening-petals" aria-hidden="true">
